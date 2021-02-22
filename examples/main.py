@@ -1,6 +1,6 @@
-import solo_motor_controller as solo
+import solo_motor_controller as Solo
 
-solo_driver = solo.SoloMotorController('address')
-print('firmware_version: ', solo_driver.get_firmware_version())
+solo = Solo.SoloMotorController('address')
 
-print('Command Mode: ',solo_driver.set_command_mode(True))
+print('Firmware Version: ', solo.get_firmware_version())
+print('Command Mode: ',solo.set_command_mode(True))

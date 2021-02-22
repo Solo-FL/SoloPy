@@ -35,6 +35,16 @@ WritePositionControllerKp = 0x1C
 WritePositionControllerKi = 0x1D
 WriteResetPositionToZero = 0x1F  # Home
 WriteOverwriteTheErrors = 0x20
+# Set Sensorless Observer Gain for Normal Brushless Motor
+WriteGainNormalBrushless = 0x21
+# Set Sensorless Observer Gain for Ultra-Fast Brushless Motor
+WriteGainUltraFastBrushless = 0x22
+WriteGainDC = 0x23  # Set Sensorless Observer Gain for DC Motor
+# Set Sensorless Observer Filter Gain for Normal Brushless Motor
+WriteFilterGainNormalBrushless = 0x24
+# Set Sensorless Observer Filter Gain for ultra-fast Brushless Motor
+WriteFilterGainUltraFastBrushless = 0x25
+WriteUartBaudRate = 0x26  # Set UART line baud-rate - 937500 / 115200 [ bits/s]
 ReadAddress = 0x81
 ReadVoltageA = 0x82
 ReadVoltageB = 0x83
@@ -69,3 +79,20 @@ ReadPositionControllerKi = 0x9E
 ReadEncoderPosition = 0xA0
 ReadErrorRegister = 0xA1
 ReadFirmwareVersion = 0xA2
+ReadHardwareVersion = 0xA3
+ReadTorque = 0xA4  # Read Torque /“Iq” Reference
+ReadSpeedReference = 0xA5  # Read Speed Reference
+ReadMagnetizingCurrent = 0xA6  # Read Magnetizing Current / “Id” Reference
+ReadPositionReference = 0xA7
+ReadPowerReference = 0xA8
+ReadDirectionRotation = 0xA9
+# Read the Non-linear observer Gain for Normal Brushless motor in Sensorless mode
+ReadGainNormalBrushless = 0xAA
+# Read the Non-linear observer Gain for Ultra-fast Brushless motor in Sensorless mode
+ReadGainUltraFastBrushless = 0xAB
+ReadGainDC = 0xAC  # Read the Non-linear observer Gain for DC motor in Sensorless mode
+# Read the Non-linear observer Filter Gain for Normal Brushless motor in Sensorless mode
+ReadFilterGainNormalBrushless = 0xAD
+# Read the Non-linear Filter Gain for Ultra-fast Brushless motor in Sensorless mode
+ReadFilterGainUltraFastBrushless = 0xAE
+ReadUartBaudRate = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )

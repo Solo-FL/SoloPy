@@ -1,6 +1,6 @@
 import serial
 import constant
-
+import math
 
 class SoloMotorController:
 
@@ -15,9 +15,12 @@ class SoloMotorController:
 
         with serial.Serial('/dev/ttyS0', 9600, timeout=1) as ser:
             ser.write(_cmd)
+            while ser.in_waiting:
+                pass
+
             _readPacket = ser.read(10)        # read up to ten bytes (timeout)
 
-            if (_readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
+            if (_readPacket and _readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
                 and _readPacket[2] == _cmd[2] and _readPacket[3] == _cmd[3]
                     and _readPacket[8] == _cmd[8] and _readPacket[9] == _cmd[9]):
                 cmd[0] = _readPacket[2]
@@ -41,8 +44,7 @@ class SoloMotorController:
 
     def __convert_to_float(self, data) -> float:
         dec = 0
-        dec = (data[0]/16)*268435456 + (data[0] % 16)*16777216 + (data[1]/16)*1048576 + (data[1] %
-                                                                                         16)*65536 + (data[2]/16)*4096 + (data[2] % 16)*256 + (data[3]/16)*16 + (data[3] % 16)*1
+        dec = int.from_bytes([data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
         if(dec <= 0x7FFE0000):
             return (float)(dec/131072.0)
         else:
@@ -51,12 +53,11 @@ class SoloMotorController:
 
     def __convert_to_long(self, data) -> int:
         dec = 0
-        dec = (data[0]/16)*268435456 + (data[0] % 16)*16777216 + (data[1]/16)*1048576 + (data[1] %
-                                                                                         16)*65536 + (data[2]/16)*4096 + (data[2] % 16)*256 + (data[3]/16)*16 + (data[3] % 16)*1
-        if(dec <= 2147483647):  # 0x7FFFFFFF
+        dec = int.from_bytes([data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
+        if(dec <= 0x7FFFFFFF):
             return dec
         else:
-            dec = 4294967295 - dec + 1  # 0xFFFFFFFF
+            dec = 0xFFFFFFFF - dec + 1
             return dec * -1
 
     def __convert_to_data(self, number) -> list:
@@ -67,27 +68,15 @@ class SoloMotorController:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec + 1
 
-            data[0] = dec/16777216
-            dec = dec % 16777216
-            data[1] = dec/65536
-            dec = dec % 65536
-            data[2] = dec/256
-            dec = dec % 256
-            data[3] = dec
+            data = [hex(dec >> i & 0xff) for i in (24,16,8,0)]
 
         elif (type(number) is float):
-            dec = (int)(number * 131072)
+            dec = math.ceil(number * 131072)
             if dec < 0:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec
 
-            data[0] = dec/16777216
-            dec = dec % 16777216
-            data[1] = dec/65536
-            dec = dec % 65536
-            data[2] = dec/256
-            dec = dec % 256
-            data[3] = dec
+            data = [hex(dec >> i & 0xff) for i in (24,16,8,0)]
 
         return data
 
@@ -236,7 +225,7 @@ class SoloMotorController:
         if (type < 0 or type > 3):
             return False
         data = self.__convert_to_data(type)
-        cmd = [self._address, constant.WriteSpeedLimit,
+        cmd = [self._address, constant.WriteMotorType,
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
@@ -310,6 +299,55 @@ class SoloMotorController:
                0x00, 0x00, 0x00, 0x00]
         return self.__exec_cmd(cmd)
 
+    # SOG => Sensorless Observer Gain
+    def set_sog_normalBrushless_motor(self, G: float) -> bool:
+        if (G < 0.01 or G > 1000):
+            return False
+        data = self.__convert_to_data(G)
+        cmd = [self._address, constant.WriteGainNormalBrushless,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_sog_ultrafastBrushless_motor(self, G: float) -> bool:
+        if (G < 0.01 or G > 1000):
+            return False
+        data = self.__convert_to_data(G)
+        cmd = [self._address, constant.WriteGainUltraFastBrushless,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_sog_dc_motor(self, G: float) -> bool:
+        if (G < 0.01 or G > 1000):
+            return False
+        data = self.__convert_to_data(G)
+        cmd = [self._address, constant.WriteGainDC,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    # SOFG = > Sensorless Observer Filter Gain
+    def set_sofg_normalBrushless_motor(self, G: float) -> bool:
+        if (G < 0.01 or G > 16000):
+            return False
+        data = self.__convert_to_data(G)
+        cmd = [self._address, constant.WriteFilterGainNormalBrushless,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_sofg_ultrafastBrushless_motor(self, G: float) -> bool:
+        if (G < 0.01 or G > 16000):
+            return False
+        data = self.__convert_to_data(G)
+        cmd = [self._address, constant.WriteFilterGainUltraFastBrushless,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_uart_baudrate(self, baudrate: int):
+        if (baudrate != 0 or baudrate != 1):
+            return False
+        data = self.__convert_to_data(baudrate)
+        cmd = [self._address, constant.WriteUartBaudRate,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
 
 ##############################Read##################################################
 
@@ -587,6 +625,123 @@ class SoloMotorController:
 
     def get_firmware_version(self) -> int:
         cmd = [self._address, constant.ReadFirmwareVersion,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_hardware_version(self) -> int:
+        cmd = [self._address, constant.ReadHardwareVersion,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_torque_reference(self) -> float:
+        cmd = [self._address, constant.ReadTorque,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_speed_reference(self) -> int:
+        cmd = [self._address, constant.ReadSpeedReference,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_magnetizing_current(self) -> float:
+        cmd = [self._address, constant.ReadMagnetizingCurrent,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_position_reference(self) -> int:
+        cmd = [self._address, constant.ReadPositionReference,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_power_reference(self) -> float:
+        cmd = [self._address, constant.ReadPowerReference,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_direction_rotation(self) -> int:
+        cmd = [self._address, constant.ReadDirectionRotation,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_sog_normalBrushless_motor(self) -> float:
+        cmd = [self._address, constant.ReadGainNormalBrushless,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_sog_ultraFastBrushless_motor(self) -> float:
+        cmd = [self._address, constant.ReadGainUltraFastBrushless,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_sog_dc_motor(self) -> float:
+        cmd = [self._address, constant.ReadGainDC,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_sofg_normalBrushless_motor(self) -> float:
+        cmd = [self._address, constant.ReadFilterGainNormalBrushless,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_sofg_ultraFastBrushless_motor(self) -> float:
+        cmd = [self._address, constant.ReadFilterGainUltraFastBrushless,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_uart_baudrate(self) -> int:
+        cmd = [self._address, constant.ReadUartBaudRate,
                0x00, 0x00, 0x00, 0x00]
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)

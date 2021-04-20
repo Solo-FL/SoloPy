@@ -211,7 +211,9 @@ class SoloMotorController:
         cmd = [0xFF, constant.WriteResetAddress, 0x00, 0x00, 0x00, 0xFF]
         return self.__exec_cmd(cmd)
 
-    def set_speed_control_mode(self, mode: bool) -> bool:
+    def set_speed_control_mode(self, mode: int) -> bool:
+        if (mode < 0 or mode > 2):
+            return False
         cmd = [self._address, constant.WriteSpeedControlMode,
                0x00, 0x00, 0x00, mode]
         return self.__exec_cmd(cmd)

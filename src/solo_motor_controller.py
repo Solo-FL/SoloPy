@@ -8,39 +8,42 @@ class SoloMotorController:
         self._address = address
 
     def __exec_cmd(self, cmd: list) -> bool:
-        _cmd = [constant.INITIATOR, constant.INITIATOR,
-                cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], constant.CRC, constant.ENDING]
+        try:
+            _cmd = [constant.INITIATOR, constant.INITIATOR,
+                    cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], constant.CRC, constant.ENDING]
 
-        _readPacket = []
+            _readPacket = []
 
-        with serial.Serial('/dev/ttyS0', 9600, timeout=1) as ser:
-            ser.write(_cmd)
-            while ser.in_waiting:
-                pass
+            with serial.Serial('/dev/ttyS0', 115200, timeout=10) as ser:
+                ser.write(_cmd)
+                while ser.in_waiting:
+                    pass
 
-            _readPacket = ser.read(10)        # read up to ten bytes (timeout)
+                _readPacket = ser.read(10)        # read up to ten bytes (timeout)
+                
+                if (_readPacket and _readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
+                    and _readPacket[2] == _cmd[2] and _readPacket[3] == _cmd[3]
+                        and _readPacket[8] == _cmd[8] and _readPacket[9] == _cmd[9]):
+                    cmd[0] = _readPacket[2]
+                    cmd[1] = _readPacket[3]
+                    cmd[2] = _readPacket[4]
+                    cmd[3] = _readPacket[5]
+                    cmd[4] = _readPacket[6]
+                    cmd[5] = _readPacket[7]
+                else:
+                    cmd[0] = 0xEE
+                    cmd[1] = 0xEE
+                    cmd[2] = 0xEE
+                    cmd[3] = 0xEE
+                    cmd[4] = 0xEE
+                    cmd[5] = 0xEE
 
-            if (_readPacket and _readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
-                and _readPacket[2] == _cmd[2] and _readPacket[3] == _cmd[3]
-                    and _readPacket[8] == _cmd[8] and _readPacket[9] == _cmd[9]):
-                cmd[0] = _readPacket[2]
-                cmd[1] = _readPacket[3]
-                cmd[2] = _readPacket[4]
-                cmd[3] = _readPacket[5]
-                cmd[4] = _readPacket[6]
-                cmd[5] = _readPacket[7]
-            else:
-                cmd[0] = 0xEE
-                cmd[1] = 0xEE
-                cmd[2] = 0xEE
-                cmd[3] = 0xEE
-                cmd[4] = 0xEE
-                cmd[5] = 0xEE
-
-            if (cmd[2] == constant.ERROR and cmd[3] == constant.ERROR and cmd[4] == constant.ERROR and cmd[5] == constant.ERROR):
-                return False
-            else:
-                return True
+                if (cmd[2] == constant.ERROR and cmd[3] == constant.ERROR and cmd[4] == constant.ERROR and cmd[5] == constant.ERROR):
+                    return False
+                else:
+                    return True
+        except Exception as ex:
+               print(ex)
 
     def __convert_to_float(self, data) -> float:
         dec = 0
@@ -68,7 +71,7 @@ class SoloMotorController:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec + 1
 
-            data = [hex(dec >> i & 0xff) for i in (24,16,8,0)]
+            data = [(dec >> i & 0xff) for i in (24,16,8,0)]
 
         elif (type(number) is float):
             dec = math.ceil(number * 131072)
@@ -76,14 +79,14 @@ class SoloMotorController:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec
 
-            data = [hex(dec >> i & 0xff) for i in (24,16,8,0)]
+            data = [(dec >> i & 0xff) for i in (24,16,8,0)]
 
         return data
 
     def __get_data(self, cmd: list) -> list:
         return [cmd[2], cmd[3], cmd[4], cmd[5]]
 
-    def set_address(self, address: str) -> bool:
+    def set_address(self, address: int) -> bool:
         cmd = [self._address, constant.WriteAddress, 0x00, 0x00, 0x00, address]
 
         if(address < 0 or address > 254):
@@ -99,8 +102,10 @@ class SoloMotorController:
         if (limit_number < 0.2 or limit_number > 32):
             return False
         data = self.__convert_to_data(limit_number)
+       
         cmd = [self._address, constant.WriteCurrentLimit,
                data[0], data[1], data[2], data[3]]
+        
         return self.__exec_cmd(cmd)
 
     def set_torque_reference(self, torque_number: float) -> bool:
@@ -255,7 +260,9 @@ class SoloMotorController:
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
-    def set_monitoring_mode(self, mode: bool) -> bool:
+    def set_monitoring_mode(self, mode: int) -> bool:
+        if (mode < 0 or mode > 2):
+            return False
         cmd = [self._address, constant.WriteMonitoringMode, 0x00, 0x00, 0x00, mode]
         return self.__exec_cmd(cmd)
 
@@ -353,7 +360,7 @@ class SoloMotorController:
 
 ##############################Read##################################################
 
-    def get_address(self, addr: int) -> int:
+    def get_address(self) -> int:
         cmd = [self._address, constant.ReadAddress, 0x00, 0x00, 0x00, 0x00]
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)
@@ -630,6 +637,7 @@ class SoloMotorController:
                0x00, 0x00, 0x00, 0x00]
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)
+            
             return self.__convert_to_long(data)
         else:
             return -1

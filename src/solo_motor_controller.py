@@ -2,10 +2,14 @@ import serial
 import constant
 import math
 
+
 class SoloMotorController:
 
-    def __init__(self, address):
+    def __init__(self, address, baudrate=937500, port="/dev/ttyS0", timeout=10):
         self._address = address
+        self._baudrate = baudrate
+        self._port = port
+        self._timeout = timeout
 
     def __exec_cmd(self, cmd: list) -> bool:
         try:
@@ -14,13 +18,14 @@ class SoloMotorController:
 
             _readPacket = []
 
-            with serial.Serial('/dev/ttyS0', 115200, timeout=10) as ser:
+            with serial.Serial(self._port, self._port, timeout=self._timeout) as ser:
                 ser.write(_cmd)
                 while ser.in_waiting:
                     pass
 
-                _readPacket = ser.read(10)        # read up to ten bytes (timeout)
-                
+                # read up to ten bytes (timeout)
+                _readPacket = ser.read(10)
+
                 if (_readPacket and _readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
                     and _readPacket[2] == _cmd[2] and _readPacket[3] == _cmd[3]
                         and _readPacket[8] == _cmd[8] and _readPacket[9] == _cmd[9]):
@@ -43,11 +48,12 @@ class SoloMotorController:
                 else:
                     return True
         except Exception as ex:
-               print(ex)
+            print(ex)
 
     def __convert_to_float(self, data) -> float:
         dec = 0
-        dec = int.from_bytes([data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
+        dec = int.from_bytes(
+            [data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
         if(dec <= 0x7FFE0000):
             return (float)(dec/131072.0)
         else:
@@ -56,7 +62,8 @@ class SoloMotorController:
 
     def __convert_to_long(self, data) -> int:
         dec = 0
-        dec = int.from_bytes([data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
+        dec = int.from_bytes(
+            [data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
         if(dec <= 0x7FFFFFFF):
             return dec
         else:
@@ -71,7 +78,7 @@ class SoloMotorController:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec + 1
 
-            data = [(dec >> i & 0xff) for i in (24,16,8,0)]
+            data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
 
         elif (type(number) is float):
             dec = math.ceil(number * 131072)
@@ -79,7 +86,7 @@ class SoloMotorController:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec
 
-            data = [(dec >> i & 0xff) for i in (24,16,8,0)]
+            data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
 
         return data
 
@@ -102,10 +109,10 @@ class SoloMotorController:
         if (limit_number < 0.2 or limit_number > 32):
             return False
         data = self.__convert_to_data(limit_number)
-       
+
         cmd = [self._address, constant.WriteCurrentLimit,
                data[0], data[1], data[2], data[3]]
-        
+
         return self.__exec_cmd(cmd)
 
     def set_torque_reference(self, torque_number: float) -> bool:
@@ -637,7 +644,7 @@ class SoloMotorController:
                0x00, 0x00, 0x00, 0x00]
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)
-            
+
             return self.__convert_to_long(data)
         else:
             return -1

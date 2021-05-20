@@ -1,0 +1,39 @@
+# EXAMPLE of how read the SOLO board temperature,
+# every second we print the value of the temperature
+
+import time
+import sys
+sys.path.append("../src")
+
+#Importing SOLO PYTHON RASPBERRY-PI library
+import solo_motor_controller as solo
+
+# the device address of SOLO
+__solo_address = 0
+
+temperature = 0
+
+def __loop():
+    #Reading
+    temperature = __solo_driver.get_temperature()
+
+    # Print
+    print("\n Read from SOLO -> Temperature: \n")
+    print(temperature)
+
+    time.sleep(1000)
+
+
+def __setup():
+ #Initialize the SOLO object using the device address of SOLO at 0
+    global __solo_driver
+    __solo_driver = solo.SoloMotorController(__solo_address)
+    while True:
+        __loop()
+
+def do_work():
+    __setup()
+
+
+if __name__ == "__main__":
+    do_work()

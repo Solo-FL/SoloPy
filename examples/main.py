@@ -1,8 +1,23 @@
 import solo_motor_controller as Solo
+import time
+import sys
+sys.path.append("../src")
 
-solo = Solo.SoloMotorController(21)
 
-#print('set_address: ', solo.set_address(21))
+solo_address = 0
+# High Speed High Performance Baudrate (Recommended)
+# Use this baudrate to have the best and real performance
+# of SOLO under all conditions 937500;
+baudrate = 937500
+
+# 115200 Low Speed Low Performance Baudrate
+# Use this baudrate only for devices that don't support 937500 or 921600 baudrates.
+port = "/dev/ttyS0"
+timeout = 10
+
+solo = Solo.SoloMotorController(solo_address, baudrate, port, timeout)
+
+print('set_address: ', solo.get_firmware_version())
 
 #print('set_command_mode: ', solo.set_command_mode(True))
 
@@ -16,7 +31,7 @@ solo = Solo.SoloMotorController(21)
 
 #print('set_identification: ',solo.set_identification(True))
 
-##print('stop_system: ',solo.stop_system()) #need restart
+# print('stop_system: ',solo.stop_system()) #need restart
 
 #print('set_pwm_frequency: ',solo.set_pwm_frequency(21))
 
@@ -46,9 +61,9 @@ solo = Solo.SoloMotorController(21)
 
 #print('set_control_mode: ',solo.set_control_mode(1))
 
-#print('set_current_controller_kp: ',solo.set_current_controller_kp(21.21)) #need restart
+# print('set_current_controller_kp: ',solo.set_current_controller_kp(21.21)) #need restart
 
-#print('set_current_controller_ki: ',solo.set_current_controller_ki(21.21)) #need restart
+# print('set_current_controller_ki: ',solo.set_current_controller_ki(21.21)) #need restart
 
 #print('set_monitoring_mode: ',solo.set_monitoring_mode(2))
 
@@ -90,7 +105,7 @@ solo = Solo.SoloMotorController(21)
 
 #print('get_bus_voltage: ',solo.get_bus_voltage())
 
-#print('get_motor_current: ',solo.get_motor_current()) #??
+# print('get_motor_current: ',solo.get_motor_current()) #??
 
 #print('get_motor_voltage: ',solo.get_motor_voltage())
 
@@ -102,9 +117,9 @@ solo = Solo.SoloMotorController(21)
 
 #print('get_current_limit: ',solo.get_current_limit())
 
-#print('get_quadrature_current: ',solo.get_quadrature_current()) #?? 8.27!
+# print('get_quadrature_current: ',solo.get_quadrature_current()) #?? 8.27!
 
-#print('get_direct_current: ',solo.get_direct_current()) #?? 5.025
+# print('get_direct_current: ',solo.get_direct_current()) #?? 5.025
 
 #print('get_number_of_poles: ',solo.get_number_of_poles())
 
@@ -112,7 +127,7 @@ solo = Solo.SoloMotorController(21)
 
 #print('get_current_controller_kp: ',solo.get_current_controller_kp())
 
-#print('get_current_controller_ki: ',solo.get_current_controller_ki()) #??
+# print('get_current_controller_ki: ',solo.get_current_controller_ki()) #??
 
 #print('get_temperature: ',solo.get_temperature())
 
@@ -122,13 +137,13 @@ solo = Solo.SoloMotorController(21)
 
 #print('get_speed: ',solo.get_speed())
 
-#print('get_motor_type: ',solo.get_motor_type()) #??
+# print('get_motor_type: ',solo.get_motor_type()) #??
 
 #print('get_speed_control_mode: ',solo.get_speed_control_mode())
 
-#print('get_command_mode: ',solo.get_command_mode()) #??
+# print('get_command_mode: ',solo.get_command_mode()) #??
 
-#print('get_control_mode: ',solo.get_control_mode()) #??
+# print('get_control_mode: ',solo.get_control_mode()) #??
 
 #print('get_speed_limit: ',solo.get_speed_limit())
 
@@ -166,4 +181,4 @@ solo = Solo.SoloMotorController(21)
 
 #print('get_sofg_ultraFastBrushless_motor: ',solo.get_sofg_ultraFastBrushless_motor())
 
-print('get_uart_baudrate: ',solo.get_uart_baudrate())
+print('get_uart_baudrate: ', solo.get_uart_baudrate())

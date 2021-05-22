@@ -18,7 +18,7 @@ class SoloMotorController:
 
             _readPacket = []
 
-            with serial.Serial(self._port, self._port, timeout=self._timeout) as ser:
+            with serial.Serial(self._port, self._baudrate, timeout=self._timeout) as ser:
                 ser.write(_cmd)
                 while ser.in_waiting:
                     pass

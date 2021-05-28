@@ -12,13 +12,13 @@ How To Use
 Open Command Line In Your Directory:
 .. code-block::
 
-   $ git clone https://github.com/libgit2/libgit2 SoloMotor;
+   $ git clone https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library.git SoloMotor
    $ cd /SoloMotor/examples
 
 Enter The following Command:
 .. code-block::
 
-   $ main.py;
+   $ main.py
 
 There is Other Examples That You Can Use,Some Of Them Need Actions To Work Correctly Please Read Comments In Each Example
 
@@ -33,7 +33,7 @@ Configure UART on Raspberry Pi
 In Raspberry Pi, enter following command in Terminal window to enable UART::
 .. code-block::
 
-   $ sudo raspi-config;
+   $ sudo raspi-config
 
 #. Select -> Interfacing Options
 #. After selecting Interfacing option, select Serial option to enable UART

@@ -365,6 +365,30 @@ class SoloMotorController:
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
+    def start_enc_hallCalibration(self, cal: int) -> bool:
+        if (cal < 0 or cal > 2):
+            return False
+        data = self.__convert_to_data(cal)
+        cmd = [self._address, constant.WriteStartENCHallCalibration,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_enc_hallCCW_offset(self, offset: float) -> bool:
+        if (offset <= 0 or offset >= 1):
+            return False
+        data = self.__convert_to_data(offset)
+        cmd = [self._address, constant.WriteSetENCHallCCWOffset,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_enc_HallCW_offset(self, offset: float) -> bool:
+        if (offset <= 0 or offset >= 1):
+            return False
+        data = self.__convert_to_data(offset)
+        cmd = [self._address, constant.WriteSetENCHallCWOffset,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
 ##############################Read##################################################
 
     def get_address(self) -> int:
@@ -763,5 +787,32 @@ class SoloMotorController:
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)
             return self.__convert_to_long(data)
+        else:
+            return -1
+
+    def get_3Phase_motorAngle(self) -> float:
+        cmd = [self._address, constant.Read3PhaseMotorAngle,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1 
+
+    def get_enc_HallCCW_offset(self) -> float:
+        cmd = [self._address, constant.ReadENCHallCCWOffset,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_enc_hallCW_offset(self) -> float:
+        cmd = [self._address, constant.ReadENCHallCWOffset,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
         else:
             return -1

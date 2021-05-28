@@ -45,6 +45,9 @@ WriteFilterGainNormalBrushless = 0x24
 # Set Sensorless Observer Filter Gain for ultra-fast Brushless Motor
 WriteFilterGainUltraFastBrushless = 0x25
 WriteUartBaudRate = 0x26  # Set UART line baud-rate - 937500 / 115200 [ bits/s]
+WriteStartENCHallCalibration =  0x27
+WriteSetENCHallCCWOffset =  0x28
+WriteSetENCHallCWOffset =  0x29
 ReadAddress = 0x81
 ReadVoltageA = 0x82
 ReadVoltageB = 0x83
@@ -95,4 +98,7 @@ ReadGainDC = 0xAC  # Read the Non-linear observer Gain for DC motor in Sensorles
 ReadFilterGainNormalBrushless = 0xAD
 # Read the Non-linear Filter Gain for Ultra-fast Brushless motor in Sensorless mode
 ReadFilterGainUltraFastBrushless = 0xAE
+Read3PhaseMotorAngle = 0xB0 # Read Estimated or Measured Rotor Angle
+ReadENCHallCCWOffset = 0xB1
+ReadENCHallCWOffset  = 0xB2
 ReadUartBaudRate = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )

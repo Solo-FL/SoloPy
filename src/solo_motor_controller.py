@@ -116,7 +116,7 @@ class SoloMotorController:
         return self.__exec_cmd(cmd)
 
     def set_torque_reference(self, torque_number: float) -> bool:
-        if (torque_number < 0.2 or torque_number > 32):
+        if (torque_number < 0 or torque_number > 32):
             return False
         data = self.__convert_to_data(torque_number)
         cmd = [self._address, constant.WriteTorqueReference,

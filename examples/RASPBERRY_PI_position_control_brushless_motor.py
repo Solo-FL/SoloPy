@@ -5,7 +5,7 @@
 #   Code version: 1.0.0
 #   Availability: https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library/
 #   Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
-#   The Code below has been tested on RASPBERRY-PI
+#   The Code below has been tested on RASPBERRY-PI 4B
 #   The Motor used for Testings: teknic m-2310P-LN-04K
 #_________________________________________________________________________________________________
 
@@ -26,15 +26,15 @@ __solo_address = 0
 # High Speed High Performance Baudrate (Recommended)
 # Use this baudrate to have the best and real performance
 # of SOLO under all conditions 937500;
-#__baudrate = 937500
+baudrate = 937500
 
 # Low Speed Low Performance Baudrate
 # Use this baudrate only for devices that don't support
 # 937500 or 921600 baudrates.
-baudrate = 115200
+#baudrate = 115200
 # _____________________________________________________________________
 
-# Desired Switching or PWM Frequency at Output
+# Desired Switching or PWM Frequency at Output in kHz
 pwm_frequency = 70
 
 # Motor's Number of Poles
@@ -53,7 +53,7 @@ speed_controller_kp = 0.15
 speed_controller_ki = 0.03
 
 # Position controller Kp
-position_controller_kp = 0.12
+position_controller_kp = 1.2
 
 # Position controller Ki
 position_controller_ki = 0.02
@@ -87,7 +87,7 @@ def __loop():
   __solo_driver.set_desired_position(desired_position_reference);
 
   # wait till motor reaches to the reference 
-  time.sleep(3000); 
+  time.sleep(3); 
 
   actual_motor_position = __solo_driver.get_encoder_position()
   print("\n Number of Pulses passed: \n",actual_motor_position)
@@ -102,7 +102,7 @@ def __loop():
   __solo_driver.set_desired_position(desired_position_reference)
 
   # wait till motor reaches to the reference 
-  time.sleep(6000)
+  time.sleep(6)
 
   actual_motor_position = __solo_driver.get_encoder_position()
   print("\n Number of Pulses passed: \n",actual_motor_position)
@@ -112,14 +112,14 @@ def __setup():
     global __solo_driver
     __solo_driver = solo.SoloMotorController(__solo_address, baudrate)
 
-    time.sleep(2000)
+    time.sleep(2)
 
     bus_voltage = __solo_driver.get_bus_voltage()
     while bus_voltage <= 0:
         # wait here till communication is established
         bus_voltage = __solo_driver.get_bus_voltage()
         print("\n Trying to Connect To SOLO")
-        time.sleep(1000)
+        time.sleep(1)
 
     print("\n Communication Established succuessfully!")
 
@@ -140,13 +140,16 @@ def __setup():
     print("\n Identifying the Motor")
 
     # wait at least for 2sec till ID. is done
-    time.sleep(2000)
+    time.sleep(3)
 
    #Operate while using Quadrature Encoder
     __solo_driver.set_speed_control_mode(1)
 
    #Control The Position
     __solo_driver.set_control_mode(2)
+    
+    # Set the Number of Poles 
+    __solo_driver.set_number_of_poles(numberOfPoles)
 
     # Speed Controller Tunings
     __solo_driver.set_speed_controller_Kp(speed_controller_kp)

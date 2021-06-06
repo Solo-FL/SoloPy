@@ -65,7 +65,7 @@ def __loop():
     print("\n Read from SOLO -> EncoderLines: \n")
     print(encoderLines_read)
 
-    time.sleep(1000)
+    time.sleep(1)
 
 
 def __setup():

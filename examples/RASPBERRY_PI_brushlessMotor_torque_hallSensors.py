@@ -6,12 +6,7 @@
 #   Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
 #   The Code below has been tested on RASPBERRY-PI
 #   The Motor used for Testings: DB56C036030-A
-#   
-#
 # _________________________________________________________________________________________________
-
-# Not Completed
-
 
 # Importing PYTHON RASPBERRY-PI library
 import solo_motor_controller as solo
@@ -29,25 +24,23 @@ __solo_address = 0
 # In this example, make sure you put SOLO into Closed-Loop by
 # pressing the Piano Switch NO  # 5 DOWN. in SOLO UNO
 
-# The Piano Switch Setup on SOLO UNO are as below since SOLO will be commandaed in Analogue Mode with PWM:
+# The Piano Switch Setup on SOLO UNO are as below
 #  PIN 5 Down: closed-loop
-#  PIN 4 UP: Torque Mode(Analogue mode)
-#  PIN 1 Down and PIN 2 UP:  BLDC_PMSM motor type(Analogue mode)
 #  PIN 3 UP(Not in DFU mode)
 
 # ____________________________________________________________________
 # High Speed High Performance Baudrate (Recommended)
 # Use this baudrate to have the best and real performance
 # of SOLO under all conditions 937500;
-#__baudrate = 937500
+baudrate = 937500
 
 # Low Speed Low Performance Baudrate
 # Use this baudrate only for devices that don't support
 # 937500 or 921600 baudrates.
-baudrate = 115200
+#baudrate = 115200
 # _____________________________________________________________________
 
-AnalogueCommandMode = 0
+DigitalCommandMode = 1
 PMSM_BLDC_Normal = 1
 UsingHallSensors = 2
 DigitalCommandMode = 1
@@ -64,22 +57,10 @@ numberOfPoles = 8
 current_limit = 12.5
 
 # Define Desired Torque referrrence
-desired_torque_iq = 1.5
-
-# Converted value to PWM duty cycle for Iq
-desired_dutyCycle_iq = 0
-
-# Converted value to PWM duty cycle for currentLimit
-desired_dutyCycle_current_limit = 0
-
-# Define the Max Measurable current in SOLO UNO for 100 % duty Cycle
-max_measurable_current_solo_uno = 32.0
+desired_torque_iq = 0.0
 
 # Battery or Bus Voltage
 bus_voltage = 0
-
-# Desired Speed Limit[RPM]
-desired_speed_limit = 3000
 
 # Motor speed feedback
 actual_motor_speed = 0
@@ -94,8 +75,8 @@ def __loop():
     __solo_driver.set_direction(0)
 
     # set a new reference for speed[RPM]
-    desired_motor_speed = 10000
-    __solo_driver.set_speed_reference(desired_motor_speed)
+    #desired_motor_speed = 10000
+    #__solo_driver.set_speed_reference(desired_motor_speed)
 
     # wait till motor reaches to the reference
     time.sleep(5000)
@@ -104,7 +85,7 @@ def __loop():
     print("\n Motor Speed: \n", actual_motor_speed)
 
     # set the Direction on C.C.W.
-    __solo_driver.set_direction()
+    __solo_driver.set_direction(1)
 
     # set a new reference for speed[RPM]
     desired_motor_speed = 30000
@@ -157,10 +138,14 @@ def __setup():
     print("\n Identifying the Motor")
 
     # wait at least for 2sec till ID. is done
-    time.sleep(2000)
+    time.sleep(3)
 
-   # Go back to Analogue Mode to accept PWM as Reference for Torque and Speed
-    __solo_driver.set_speed_control_mode(AnalogueCommandMode)
+   #Control The Torque
+    __solo_driver.set_control_mode(1)
+    
+    # Set the Number of Poles 
+    __solo_driver.set_number_of_poles(numberOfPoles)
+    
 
     while True:
         __loop()

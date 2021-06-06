@@ -21,7 +21,7 @@ def __loop():
     print("\n Read from SOLO -> Temperature: \n")
     print(temperature)
 
-    time.sleep(1000)
+    time.sleep(1)
 
 
 def __setup():

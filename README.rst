@@ -8,27 +8,18 @@ or read all the parameters that are stored or existing in command set of SOLO.
 More information about it on `the SOLO website <https://www.solomotorcontrollers.com/>`_.
 
 How To Use
-===========
-Open Command Line In Your Directory:
+=============
+To download the full library with examples
 .. code-block::
 
-   $ git clone https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library.git SoloMotor
-   $ cd /SoloMotor/examples
-
-Enter The following Command:
-.. code-block::
-
-   $ main.py
-
-There is Other Examples That You Can Use,Some Of Them Need Actions To Work Correctly Please Read Comments In Each Example
-
-For List All Available Methods Read `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__
+   $ git clone https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library.git SoloMotorControllers
 
 
+For List of All the Available Methods Read the `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__
 
 
-Configure UART on Raspberry Pi
-=================================
+Configuring UART on Raspberry Pi
+=============
 
 In Raspberry Pi, enter following command in Terminal window to enable UART::
 .. code-block::
@@ -48,16 +39,22 @@ Dependencies
 `Python 3 <https://www.python.org/downloads/>`__
 `pyserial <https://github.com/pyserial/pyserial>`__
 
+Testing Examples
+=============
+To test the examples in Raspberry Pi you might need to put the example files within the "src" folder to be able to compile them
+The installation of "pyserial" is mandatory, to install that
+.. code-block::
 
+   $ sudo apt-get install python-serial
 
 Authors
-=======
+=============
 
 SOLO Motor Controller PYTHON RASPBERRY PI Library is created by SOLO Motor Controllers team
 
 
 License
-=======
+=============
 
 GNU General Public License v3.0 or later
 

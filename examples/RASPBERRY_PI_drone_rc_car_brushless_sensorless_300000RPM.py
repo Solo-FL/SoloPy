@@ -1,14 +1,13 @@
 #    Title: How to Drive Fast Drone or RC car Brushless Motors using RASPBERRY-PIand SOLO in Sensoless Mode
 #    Author: SOLOMOTORCONTROLLERS
 #    Date: 2021
-#    Code version: 1.0.0
+#    Code version: 1.0.1
 #    Availability: https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library/
 #    Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
 #    The Code below has been tested on RASPBERRY-PI 4B
 #    The Motor used for Testings: 4150KV, 4x4 SCT 550
-_____________________________________________________________________________________________
+#   2Importing SOLO PYTHON RASPBERRY-PI library
 
-# Importing SOLO PYTHON RASPBERRY-PI library
 import solo_motor_controller as solo
 import time
 import sys
@@ -78,6 +77,11 @@ def __loop():
 
   time.sleep(5)
 
+  # stop the motor
+  desired_motor_speed = 0
+  __solo_driver.set_speed_reference(desired_motor_speed)
+  time.sleep(2)
+  
   # set the Direction on C.C.W.
   __solo_driver.set_direction(1)
 

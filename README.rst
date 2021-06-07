@@ -32,7 +32,6 @@ In Raspberry Pi, enter following command in Terminal window to enable UART::
 #. At the end, it will ask for enabling Hardware Serial port, select Yes,
 #. Finally, our UART is enabled for Serial Communication on RX and TX pin of Raspberry Pi 3.
 #. Then, reboot the Raspberry Pi.
-#. `S <https://www.electronicwings.com/raspberry-pi/raspberry-pi-uart-communication-using-python-and-c>`__
 
 Dependencies
 =============

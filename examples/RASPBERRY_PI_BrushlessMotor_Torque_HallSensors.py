@@ -88,7 +88,18 @@ def __loop():
     
     # wait 
     time.sleep(3)
-
+    
+    # stop the motor
+    desired_torque_iq = 0.0
+    __solo_driver.set_torque_reference(desired_torque_iq)
+    time.sleep(1)
+    
+    actual_motor_torque_iq = __solo_driver.get_quadrature_current()
+    print("\n Actual Motor Iq: \n", actual_motor_torque_iq)
+    
+    actual_motor_speed = __solo_driver.get_speed()
+    print("\n Motor Speed: \n", actual_motor_speed)
+    
     # set the Direction on C.C.W.
     __solo_driver.set_direction(1)
     

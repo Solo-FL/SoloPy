@@ -3,16 +3,21 @@ import time
 import sys
 sys.path.append("../src")
 
-
 solo_address = 0
 # High Speed High Performance Baudrate (Recommended)
 # Use this baudrate to have the best and real performance
 # of SOLO under all conditions 937500;
 baudrate = 937500
-
 # 115200 Low Speed Low Performance Baudrate
 # Use this baudrate only for devices that don't support 937500 or 921600 baudrates.
+
+# Uart port
 port = "/dev/ttyS0"
+
+# To get Usb port name, connect solo and enter the following command in terminal
+# python -m serial.tools.list_ports -v
+# port = "/dev/ttyAMC0" linux
+# port = "COM8" windows
 timeout = 10
 
 solo = Solo.SoloMotorController(solo_address, baudrate, port, timeout)

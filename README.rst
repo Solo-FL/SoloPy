@@ -9,6 +9,8 @@ More information about it on `the SOLO website <https://www.solomotorcontrollers
 
 How To Use
 =============
+Please make sure you have installed Dependencies
+
 To download the full library with examples
 .. code-block::
 
@@ -32,6 +34,13 @@ In Raspberry Pi, enter following command in Terminal window to enable UART::
 #. At the end, it will ask for enabling Hardware Serial port, select Yes,
 #. Finally, our UART is enabled for Serial Communication on RX and TX pin of Raspberry Pi 3.
 #. Then, reboot the Raspberry Pi.
+
+Communication within USB
+==========================
+#. Connect Solo to Raspberry Pi or Pc
+#. Open terminal in linux(cmd in windows) & enter the following command
+#. python -m serial.tools.list_ports -v
+#. get the port name that solo is connected to (in linux it's sth like '/dev/ttyAMC0' and in windows it's sth like 'COM8'
 
 Dependencies
 =============

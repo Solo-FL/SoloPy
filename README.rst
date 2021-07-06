@@ -1,9 +1,11 @@
 |License|
 
 ==================================================
-SOLO Motor Controller PYTHON RASPBERRY PI Library
+SoloPy
 ==================================================
-SOLO Motor Controller PYTHON RASPBERRY PI Library It can be used with UART line of RASPBERRY PI or any similar controller to control, command
+
+SoloPy is a library of SOLO Motor Controllers write in PYTHON compatible also with RASPBERRY PI.
+It can be used with UART line of RASPBERRY PI or any similar controller to control, command
 or read all the parameters that are stored or existing in command set of SOLO.
 More information about it on `the SOLO website <https://www.solomotorcontrollers.com/>`_.
 
@@ -14,7 +16,7 @@ Please make sure you have installed Dependencies
 To download the full library with examples
 .. code-block::
 
-   $ git clone https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library.git SoloMotorControllers
+   $ git clone https://github.com/Solo-FL/SoloPy.git SoloMotorControllers
 
 
 For List of All the Available Methods Read the `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__

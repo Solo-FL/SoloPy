@@ -1,4 +1,4 @@
-import solo_motor_controller as Solo
+from SoloPyTest import solo_motor_controller as Solo
 import time
 import sys
 sys.path.append("../src")

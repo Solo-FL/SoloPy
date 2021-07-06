@@ -2,7 +2,7 @@
 #    Author: SOLOMOTORCONTROLLERS
 #    Date: 2021
 #    Code version: 1.0.1
-#    Availability: https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library/
+#    Availability: https://github.com/Solo-FL/SoloPy/
 #    Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
 #    The Code below has been tested on RASPBERRY-PI 4B
 #    The Motor used for Testings: 4150KV, 4x4 SCT 550

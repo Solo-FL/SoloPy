@@ -1,4 +1,4 @@
-# Importing SOLO PYTHON RASPBERRY-PI library
+# Importing SoloPy
 import solo_motor_controller as solo
 import time
 import sys

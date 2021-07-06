@@ -1,6 +1,7 @@
 import serial
 import constant
 import math
+import time
 
 
 class SoloMotorController:
@@ -19,6 +20,7 @@ class SoloMotorController:
             _readPacket = []
 
             with serial.Serial(self._port, self._baudrate, timeout=self._timeout) as ser:
+                time.sleep(0.1)
                 ser.write(_cmd)
                 while ser.in_waiting:
                     pass

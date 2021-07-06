@@ -60,7 +60,7 @@ The installation of "pyserial" is mandatory, to install that
 Authors
 =============
 
-SOLO Motor Controller PYTHON RASPBERRY PI Library is created by SOLO Motor Controllers team
+SoloPy is created by SOLO Motor Controllers team
 
 
 License

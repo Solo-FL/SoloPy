@@ -8,7 +8,7 @@ setup(
   author = 'Solo',                   # Type in your name
   author_email = 'mldsalehi@gmail.com',      # Type in your E-Mail
   url = 'https://github.com/Alimilad/SoloPyTest',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/Alimilad/SoloPyTest/archive/refs/tags/0.1.tar.gz',    # I explain this later on
   keywords = ['SoloMotor'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'pyserial'

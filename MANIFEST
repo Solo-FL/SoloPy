@@ -2,6 +2,6 @@
 README.rst
 setup.cfg
 setup.py
-SoloPyTest\__init__.py
-SoloPyTest\constant.py
-SoloPyTest\solo_motor_controller.py
+SoloPy\__init__.py
+SoloPy\constant.py
+SoloPy\solo_motor_controller.py

@@ -6,7 +6,7 @@ setup(
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'PYTHON Library for Control Solo Motor',   # Give a short description about your library
   author = 'Solo',                   # Type in your name
-  author_email = 'mldsalehi@gmail.com',      # Type in your E-Mail
+  author_email = 'support@solomotorcontrollers.com',      # Type in your E-Mail
   url = 'https://github.com/Solo-FL/SoloPy',   # Provide either the link to your github or to your website
   download_url = 'https://github.com/Alimilad/SoloPyTest/archive/refs/tags/0.3.tar.gz',    # I explain this later on
   keywords = ['SoloMotor'],   # Keywords that define your package best

@@ -10,10 +10,9 @@
 #_________________________________________________________________________________________________
 
 # Importing SOLO PYTHON RASPBERRY-PIlibrary
-import solo_motor_controller as solo
+from SoloPy import solo_motor_controller as Solo
 import time
 import sys
-sys.path.append("../src")
 
 
 # the device address of SOLO

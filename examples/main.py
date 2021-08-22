@@ -1,7 +1,6 @@
-import solo_motor_controller as Solo
+from SoloPy import solo_motor_controller as Solo
 import time
 import sys
-sys.path.append("../src")
 
 
 solo_address = 0

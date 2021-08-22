@@ -3,10 +3,9 @@
 
 import time
 import sys
-sys.path.append("../src")
 
 #Importing SoloPy
-import solo_motor_controller as solo
+from SoloPy import solo_motor_controller as Solo
 
 # the device address of SOLO
 __solo_address = 0 

@@ -1,8 +1,7 @@
 # Importing SoloPy
-import solo_motor_controller as solo
+from SoloPy import solo_motor_controller as Solo
 import time
 import sys
-sys.path.append("../src")
 
 # **********************************************/
 # You can instanciate up to 254 SOLOs in a network

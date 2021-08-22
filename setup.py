@@ -2,14 +2,14 @@ from distutils.core import setup
 setup(
   name = 'SoloPy',         # How you named your package folder (MyLib)
   packages = ['SoloPy'],   # Chose the same as "name"
-  version = '0.3',      # Start with a small number and increase it with every change you make
-  license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
+  version = '3.0',      # Start with a small number and increase it with every change you make
+  license='GPL',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'PYTHON Library for Control Solo Motor',   # Give a short description about your library
   author = 'Solo',                   # Type in your name
   author_email = 'support@solomotorcontrollers.com',      # Type in your E-Mail
   url = 'https://github.com/Solo-FL/SoloPy',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/Alimilad/SoloPyTest/archive/refs/tags/0.3.tar.gz',    # I explain this later on
-  keywords = ['SoloMotor'],   # Keywords that define your package best
+  download_url = 'https://github.com/Solo-FL/SoloPy/archive/refs/tags/v1.0.tar.gz',    # I explain this later on
+  keywords = ['Solo Motor controllers', 'Solo', 'SoloPy'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'pyserial'
       ],

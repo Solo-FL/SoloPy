@@ -1,5 +1,5 @@
 import serial
-import SoloPyTest.constant as constant
+import SoloPy.constant as constant
 import math
 import time
 

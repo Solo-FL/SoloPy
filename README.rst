@@ -11,12 +11,12 @@ More information about it on `the SOLO website <https://www.solomotorcontrollers
 
 How To Use
 =============
-Please make sure you have installed Dependencies
+Please make sure you have installed Python
 
-To download the full library with examples
+Install Solopy From Pip
 .. code-block::
 
-   $ git clone https://github.com/Solo-FL/SoloPy.git SoloMotorControllers
+   $ pip install solopy
 
 
 For List of All the Available Methods Read the `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__

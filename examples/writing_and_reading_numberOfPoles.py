@@ -5,7 +5,7 @@ import time
 import sys
 
 #Importing SoloPy
-from SoloPy import solo_motor_controller as Solo
+from SoloPy import solo_motor_controller as solo
 
 # the device address of SOLO
 __solo_address = 0 

@@ -8,7 +8,7 @@
 #    The Motor used for Testings: 4150KV, 4x4 SCT 550
 #   2Importing SOLO PYTHON RASPBERRY-PI library
 
-from SoloPy import solo_motor_controller as Solo
+from SoloPy import solo_motor_controller as solo
 import time
 import sys
 

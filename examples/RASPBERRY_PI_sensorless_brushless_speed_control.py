@@ -2,13 +2,13 @@
 #     Author: SOLOMOTORCONTROLLERS.COM
 #     Date: 2021
 #     Code version: 1.0.0
-#     Availability: https://github.com/Solo-FL/SOLO-motor-controllers-PYTHON-RASPBERRY-PI-library/
+#     Availability: https://github.com/Solo-FL/SoloPy/
 #     Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
 #     The Code below has been tested on RASPBERRY-PI 4B
 #     The Motor used for Testings: teknic m-2310P-LN-04K
 # _________________________________________________________________________________________________
 
-# Importing SOLO PYTHON RASPBERRY-PI library
+# Importing SOLOPY
 from SoloPy import solo_motor_controller as solo
 import time
 import sys

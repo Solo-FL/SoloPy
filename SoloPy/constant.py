@@ -48,6 +48,10 @@ WriteUartBaudRate = 0x26  # Set UART line baud-rate - 937500 / 115200 [ bits/s]
 WriteStartENCHallCalibration =  0x27
 WriteSetENCHallCCWOffset =  0x28
 WriteSetENCHallCWOffset =  0x29
+WriteSpeedAccelerationValue = 0x2A
+WriteSpeedDecelerationValue = 0x2B
+WriteCanBusBaudRate = 0x2
+
 ReadAddress = 0x81
 ReadVoltageA = 0x82
 ReadVoltageB = 0x83
@@ -102,3 +106,8 @@ Read3PhaseMotorAngle = 0xB0 # Read Estimated or Measured Rotor Angle
 ReadENCHallCCWOffset = 0xB1
 ReadENCHallCWOffset  = 0xB2
 ReadUartBaudRate = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )
+ReadSpeedAccelerationValue = 0xB4
+ReadSpeedDecelerationValue = 0xB5
+ReadCanBusBaudRate = 0xB6
+
+InputOutOfRange = "input out of range, set function will not be executed"

@@ -8,7 +8,7 @@ from importlib import reload
 
 class SoloMotorController:
 
-     def __init__(self, address, baudrate=937500, port="/dev/ttyS0", timeout=3 , loggerLevel = logging.INFO):
+    def __init__(self, address, baudrate=937500, port="/dev/ttyS0", timeout=3 , loggerLevel = logging.INFO):
         self._version = "SoloPy v1.1"
         
         #logger init

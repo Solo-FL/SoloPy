@@ -2,31 +2,78 @@ import serial
 import SoloPy.constant as constant
 import math
 import time
+import logging
+from importlib import reload
 
 
 class SoloMotorController:
 
-    def __init__(self, address, baudrate=937500, port="/dev/ttyS0", timeout=10):
+     def __init__(self, address, baudrate=937500, port="/dev/ttyS0", timeout=3 , loggerLevel = logging.INFO):
+        self._version = "SoloPy v1.1"
+        
+        #logger init
+        logging.shutdown()
+        reload(logging)
+        self._logger = logging.getLogger('SoloPy')
+        self._logger.setLevel(loggerLevel)
+        ch = logging.StreamHandler()
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        ch.setFormatter(formatter)
+        self._logger.addHandler(ch)
+        #logger init end
+        self._logger.debug('SoloMotorController INIT')
+
         self._address = address
         self._baudrate = baudrate
         self._port = port
         self._timeout = timeout
+        self._ser_status = 0
+        self._ser = None
+        self.serial_open()
+        #TODO try solving serial error
+    
+    def __del__(self):
+        self._logger.debug('SoloMotorController DEL')
+        try:
+            if(self._ser_status==1):
+                self._logger.debug('Serial close')
+                self._ser.close()
+        except Exception as e:
+            self._logger.error("Exception on Serial Closure")
+            #self._logger.error( e , exc_info=True)    
 
     def __exec_cmd(self, cmd: list) -> bool:
-        try:
-            _cmd = [constant.INITIATOR, constant.INITIATOR,
-                    cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], constant.CRC, constant.ENDING]
+        if(self._ser_status==1):
+            try:
+                messageLog = "Serial connection is: " + str(self._ser.isOpen()) 
+                self._logger.debug(messageLog)
+                if(self._ser.isOpen() == False):
+                    self._logger.debug("Serial open")  
+                    self._ser.open()
+                    self._logger.debug("Serial flush")  
+                    self._ser.flush()
+                    self._ser.flushInput()
+                    self._ser_status = 1
+                    
+                _cmd = [constant.INITIATOR, constant.INITIATOR,
+                        cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], constant.CRC, constant.ENDING]
 
-            _readPacket = []
+                _readPacket = []   
 
-            with serial.Serial(self._port, self._baudrate, timeout=self._timeout) as ser:
+                messageLog =  "WRITE: " + str( [hex(constant.INITIATOR), hex(constant.INITIATOR),hex(cmd[0]), hex(cmd[1]), hex(cmd[2]), hex(cmd[3]), hex(cmd[4]), hex(cmd[5]),hex(constant.CRC), hex(constant.ENDING)])
+                self._logger.debug(messageLog) 
+                
+                self._ser.write(_cmd)
+
+                #Time to ensure the writing, reducing it can make the comunication instable
                 time.sleep(0.1)
-                ser.write(_cmd)
-                while ser.in_waiting:
-                    pass
 
                 # read up to ten bytes (timeout)
-                _readPacket = ser.read(10)
+                _readPacket = self._ser.read(10)
+                messageLog = "READ: " + str( [hex(i) for i in _readPacket]) + " size: "  + str(len(_readPacket))
+                self._logger.debug( messageLog) 
+                if(len(_readPacket)==0):
+                    self._ser.flush()
 
                 if (_readPacket and _readPacket[0] == _cmd[0] and _readPacket[1] == _cmd[1]
                     and _readPacket[2] == _cmd[2] and _readPacket[3] == _cmd[3]
@@ -49,8 +96,14 @@ class SoloMotorController:
                     return False
                 else:
                     return True
-        except Exception as ex:
-            print(ex)
+            except Exception as e:
+                self._logger.debug('__exec_cmd Exception')
+                self._logger.debug( e , exc_info=True)
+                self.serial_error_handler()
+                return False
+
+        self._logger.info("Serial status not ready") 
+        return False       
 
     def __convert_to_float(self, data) -> float:
         dec = 0
@@ -79,17 +132,13 @@ class SoloMotorController:
             if dec < 0:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec + 1
-
             data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
-
         elif (type(number) is float):
             dec = math.ceil(number * 131072)
             if dec < 0:
                 dec *= -1
                 dec = 0xFFFFFFFF - dec
-
             data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
-
         return data
 
     def __get_data(self, cmd: list) -> list:
@@ -97,19 +146,142 @@ class SoloMotorController:
 
     def set_address(self, address: int) -> bool:
         cmd = [self._address, constant.WriteAddress, 0x00, 0x00, 0x00, address]
-
         if(address < 0 or address > 254):
             return False
-
         return self.__exec_cmd(cmd)
 
-    def set_command_mode(self, mode: bool) -> bool:
-        cmd = [self._address, constant.WriteCommandMode, 0x00, 0x00, 0x00, mode]
+    ##############################Support################################################## """
+    def version(self) -> string:
+        return self._version
+
+    def serial_open(self) -> bool:
+        self._logger.debug("serial_open start")
+        try:  
+            self._ser = serial.Serial(self._port, self._baudrate, timeout=self._timeout, writeTimeout =self._timeout)
+            self._ser_status = 1
+
+            #Time sleep for ensure serial initialization
+            time.sleep(0.2)
+            
+        except Exception as e:
+            self._logger.error("serial_open: Exception during the serial inizialisation")
+            #self._logger.error( e , exc_info=True)
+            self._ser_status= -1
+            #raise e
+            return False
+
+        if(self._ser_status==1):
+            self._logger.debug("Serial init")  
+            self._ser.bytesize=serial.EIGHTBITS
+            self._ser.parity=serial.PARITY_NONE
+            self._ser.stopbits=serial.STOPBITS_ONE  
+            time.sleep(0.2)
+            if(self._ser.isOpen() == False):
+                self._logger.debug("Serial open")  
+                self._ser.open()
+            
+            self._ser.flush()
+            self._ser.flushInput()
+            self._logger.info("serial_open: success") 
+            self._logger.debug("serial_open end")
+            return True
+
+        self._logger.debug("serial_open end")
+        return False
+
+    def serial_error_handler(self) -> bool:
+        self._logger.debug('SEH start')
+        try:
+            try:
+                if(self._ser.isOpen()):
+                    self._logger.debug('SEH: serial is open')
+                    if(self._ser.inWaiting()>0):
+                        self._logger.debug('SEH: clean buffers')
+                        self._ser.flushInput()
+                        self._ser.flushOutput()
+
+                    self._logger.debug('SEH: serial close')
+                    self._ser.close()
+                    self._ser_status = 0
+
+            except Exception as e:
+                pass
+            
+            self._logger.debug('SEH: serial init')
+            res = self.serial_open()
+            self._logger.debug('SEH end')
+            return res
+
+        except Exception as e:
+            self._logger.error("SEH: Exception")
+            #self._logger.error( e , exc_info=True)
+            self._ser_status = -1
+            self._logger.debug('SEH end')
+            return False 
+
+    def serial_close(self) -> bool:
+        self._logger.debug("serial_close start")
+
+        if (self._ser_status==1):
+            try:
+                self._ser.close()
+                self._logger.info("serial_close: Serial closed")
+                self._ser_status = 0
+                return True
+            except Exception as e:
+                self._logger.error("serial_close: Exception on Serial Closure")
+                #self._logger.error( e , exc_info=True)
+                self._ser_status = -1
+                return False
+
+        if(self._ser_status == 0): 
+            self._logger.info("serial_close: Serial is already close")
+        if(self._ser_status == -1): 
+            self._logger.info("serial_close: Serial is in error")
+        self._logger.debug("serial_close end")
+        return False
+
+    def serial_status(self) -> string:
+        status = ''
+        if(self._ser_status==1):
+            status += 'SPS: Serial Open'
+            try:
+                status += '\nSPS: Serial comunication open: ' + str(self._ser.isOpen())
+                if(self._ser.isOpen()):
+                    status += '\nSPS: Serial input buffer size: '+ str(self._ser.out_waiting)
+                    status += '\nSPS: Serial output buffer size: '+ str(self._ser.inWaiting())
+            except Exception as e:
+                self._logger.error('exception on printing the status')
+                #self._logger.error( e , exc_info=True)
+
+        if(self._ser_status== 0):
+            status += 'SPS: Serial Close'
+        
+        if(self._ser_status== -1):
+            status += 'SPS: Serial on Error'
+        return status
+        
+    def serial_is_working(self) -> bool:
+        if(self.get_voltage_a()==-1):
+            return False
+        return True
+
+    ##############################Write##################################################
+
+    def set_command_mode(self, mode: int) -> bool:
+        if (mode < 0 or mode > 1):
+            self._logger.info(constant.InputOutOfRange)
+            return False
+        mode = int(mode)
+        data = self.__convert_to_data(mode)
+        cmd = [self._address, constant.WriteCommandMode,
+               data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
     def set_current_limit(self, limit_number: float) -> bool:
         if (limit_number < 0.2 or limit_number > 32):
             return False
+        limit_number = float(limit_number)
         data = self.__convert_to_data(limit_number)
 
         cmd = [self._address, constant.WriteCurrentLimit,
@@ -119,7 +291,9 @@ class SoloMotorController:
 
     def set_torque_reference(self, torque_number: float) -> bool:
         if (torque_number < 0 or torque_number > 32):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        torque_number = float(torque_number)
         data = self.__convert_to_data(torque_number)
         cmd = [self._address, constant.WriteTorqueReference,
                data[0], data[1], data[2], data[3]]
@@ -127,8 +301,10 @@ class SoloMotorController:
         return self.__exec_cmd(cmd)
 
     def set_speed_reference(self, speed_number: int) -> bool:
-        if (speed_number < 0 and speed_number > 30000):
+        if (speed_number < 0 or speed_number > 30000):
+            self._logger.info(constant.InputOutOfRange)
             return False
+        speed_number = int(speed_number)
         data = self.__convert_to_data(speed_number)
         cmd = [self._address, constant.WriteSpeedReference,
                data[0], data[1], data[2], data[3]]
@@ -137,15 +313,22 @@ class SoloMotorController:
 
     def set_power_reference(self, power_number: float) -> bool:
         if (power_number < 0 or power_number > 100):
+            self._logger.info(constant.InputOutOfRange)
             return False
+        power_number = float(power_number)
         data = self.__convert_to_data(power_number)
         cmd = [self._address, constant.WritePowerReference,
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
-    def set_identification(self, identification: bool) -> bool:
+    def set_identification(self, identification: int) -> bool:
+        if (identification < 0 or identification > 1):
+            self._logger.info(constant.InputOutOfRange)
+            return False
+        identification = int(identification)
+        data = self.__convert_to_data(identification)
         cmd = [self._address, constant.WriteIdentification,
-               0x00, 0x00, 0x00, identification]
+               data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
     def stop_system(self) -> bool:
@@ -155,7 +338,9 @@ class SoloMotorController:
 
     def set_pwm_frequency(self, pwm: int) -> bool:
         if (pwm < 8 or pwm > 80):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        pwm = int(pwm)
         data = self.__convert_to_data(pwm)
         cmd = [self._address, constant.WritePWMFrequency,
                data[0], data[1], data[2], data[3]]
@@ -163,7 +348,9 @@ class SoloMotorController:
 
     def set_speed_controller_Kp(self, kp: float) -> bool:
         if (kp < 0 or kp > 300):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        kp = float(kp)
         data = self.__convert_to_data(kp)
         cmd = [self._address, constant.WriteSpeedControllerKp,
                data[0], data[1], data[2], data[3]]
@@ -171,19 +358,29 @@ class SoloMotorController:
 
     def set_speed_controller_Ki(self, ki: float) -> bool:
         if (ki < 0 or ki > 300):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        ki = float(ki)
         data = self.__convert_to_data(ki)
         cmd = [self._address, constant.WriteSpeedControllerKi,
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
-    def set_direction(self, dir: bool) -> bool:
-        cmd = [self._address, constant.WriteDirection, 0x00, 0x00, 0x00, dir]
+    def set_direction(self, dir: int) -> bool:
+        if (dir < 0 or dir > 1):
+            self._logger.info(constant.InputOutOfRange)
+            return False
+        dir = int(dir)
+        data = self.__convert_to_data(dir)
+        cmd = [self._address, constant.WriteDirection,
+               data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
     def set_resistance(self, res: float) -> bool:
         if (res < 0.001 or res > 50):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        res = float(res)
         data = self.__convert_to_data(res)
         cmd = [self._address, constant.WriteResistance,
                data[0], data[1], data[2], data[3]]
@@ -191,7 +388,9 @@ class SoloMotorController:
 
     def set_inductance(self, ind: float) -> bool:
         if (ind < 0.00001 or ind > 0.2):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        ind = float(ind)
         data = self.__convert_to_data(ind)
         cmd = [self._address, constant.WriteInductance,
                data[0], data[1], data[2], data[3]]
@@ -199,7 +398,9 @@ class SoloMotorController:
 
     def set_number_of_poles(self, poles: int) -> bool:
         if (poles < 1 or poles > 80):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        poles = int(poles)
         data = self.__convert_to_data(poles)
         cmd = [self._address, constant.WriteNumberOfPoles,
                data[0], data[1], data[2], data[3]]
@@ -207,7 +408,9 @@ class SoloMotorController:
 
     def set_encoder_lines(self, enc: int) -> bool:
         if (enc < 1 or enc > 40000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        enc = int(enc)
         data = self.__convert_to_data(enc)
         cmd = [self._address, constant.WriteEncoderLines,
                data[0], data[1], data[2], data[3]]
@@ -215,7 +418,9 @@ class SoloMotorController:
 
     def set_speed_limit(self, speed: int) -> bool:
         if (speed < 1 or speed > 30000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        speed = int(speed)
         data = self.__convert_to_data(speed)
         cmd = [self._address, constant.WriteSpeedLimit,
                data[0], data[1], data[2], data[3]]
@@ -227,7 +432,9 @@ class SoloMotorController:
 
     def set_speed_control_mode(self, mode: int) -> bool:
         if (mode < 0 or mode > 2):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        mode = int(mode)
         cmd = [self._address, constant.WriteSpeedControlMode,
                0x00, 0x00, 0x00, mode]
         return self.__exec_cmd(cmd)
@@ -239,7 +446,9 @@ class SoloMotorController:
 
     def set_motor_type(self, type: int) -> bool:
         if (type < 0 or type > 3):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        type = int(type)
         data = self.__convert_to_data(type)
         cmd = [self._address, constant.WriteMotorType,
                data[0], data[1], data[2], data[3]]
@@ -247,7 +456,9 @@ class SoloMotorController:
 
     def set_control_mode(self, mode: int) -> bool:
         if (mode < 0 or mode > 2):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        mode = int(mode)
         data = self.__convert_to_data(mode)
         cmd = [self._address, constant.WriteControlMode,
                data[0], data[1], data[2], data[3]]
@@ -255,7 +466,9 @@ class SoloMotorController:
 
     def set_current_controller_kp(self, kp: float) -> bool:
         if (kp < 0 or kp > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        kp = float(kp)
         data = self.__convert_to_data(kp)
         cmd = [self._address, constant.WriteCurrentControllerKp,
                data[0], data[1], data[2], data[3]]
@@ -263,7 +476,9 @@ class SoloMotorController:
 
     def set_current_controller_ki(self, ki: float) -> bool:
         if (ki < 0 or ki > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        ki = float(ki)
         data = self.__convert_to_data(ki)
         cmd = [self._address, constant.WriteCurrentControllerKi,
                data[0], data[1], data[2], data[3]]
@@ -271,13 +486,17 @@ class SoloMotorController:
 
     def set_monitoring_mode(self, mode: int) -> bool:
         if (mode < 0 or mode > 2):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        mode = int(mode)
         cmd = [self._address, constant.WriteMonitoringMode, 0x00, 0x00, 0x00, mode]
         return self.__exec_cmd(cmd)
 
     def set_magnetizing_current_reference(self, mg: float) -> bool:
         if (mg < 0 or mg > 32):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        mg = float(mg)
         data = self.__convert_to_data(mg)
         cmd = [self._address, constant.WriteMagnetizingCurrentReference,
                data[0], data[1], data[2], data[3]]
@@ -285,7 +504,9 @@ class SoloMotorController:
 
     def set_desired_position(self, pos: int) -> bool:
         if (pos < -2147483647 or pos > 2147483647):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        pos = int(pos)
         data = self.__convert_to_data(pos)
         cmd = [self._address, constant.WriteDesiredPosition,
                data[0], data[1], data[2], data[3]]
@@ -293,7 +514,9 @@ class SoloMotorController:
 
     def set_position_controller_kp(self, kp: float) -> bool:
         if (kp < 0 or kp > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        kp = float(kp)
         data = self.__convert_to_data(kp)
         cmd = [self._address, constant.WritePositionControllerKp,
                data[0], data[1], data[2], data[3]]
@@ -301,7 +524,9 @@ class SoloMotorController:
 
     def set_position_controller_ki(self, ki: float) -> bool:
         if (ki < 0 or ki > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        ki = float(ki)
         data = self.__convert_to_data(ki)
         cmd = [self._address, constant.WritePositionControllerKi,
                data[0], data[1], data[2], data[3]]
@@ -320,7 +545,9 @@ class SoloMotorController:
     # SOG => Sensorless Observer Gain
     def set_sog_normalBrushless_motor(self, G: float) -> bool:
         if (G < 0.01 or G > 1000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        G = float(G)
         data = self.__convert_to_data(G)
         cmd = [self._address, constant.WriteGainNormalBrushless,
                data[0], data[1], data[2], data[3]]
@@ -328,7 +555,9 @@ class SoloMotorController:
 
     def set_sog_ultrafastBrushless_motor(self, G: float) -> bool:
         if (G < 0.01 or G > 1000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        G = float(G)
         data = self.__convert_to_data(G)
         cmd = [self._address, constant.WriteGainUltraFastBrushless,
                data[0], data[1], data[2], data[3]]
@@ -336,7 +565,9 @@ class SoloMotorController:
 
     def set_sog_dc_motor(self, G: float) -> bool:
         if (G < 0.01 or G > 1000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        G = float(G)
         data = self.__convert_to_data(G)
         cmd = [self._address, constant.WriteGainDC,
                data[0], data[1], data[2], data[3]]
@@ -345,7 +576,9 @@ class SoloMotorController:
     # SOFG = > Sensorless Observer Filter Gain
     def set_sofg_normalBrushless_motor(self, G: float) -> bool:
         if (G < 0.01 or G > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        G = float(G)
         data = self.__convert_to_data(G)
         cmd = [self._address, constant.WriteFilterGainNormalBrushless,
                data[0], data[1], data[2], data[3]]
@@ -353,7 +586,9 @@ class SoloMotorController:
 
     def set_sofg_ultrafastBrushless_motor(self, G: float) -> bool:
         if (G < 0.01 or G > 16000):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        G = float(G)
         data = self.__convert_to_data(G)
         cmd = [self._address, constant.WriteFilterGainUltraFastBrushless,
                data[0], data[1], data[2], data[3]]
@@ -361,7 +596,9 @@ class SoloMotorController:
 
     def set_uart_baudrate(self, baudrate: int):
         if (baudrate != 0 or baudrate != 1):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        baudrate = int(baudrate)
         data = self.__convert_to_data(baudrate)
         cmd = [self._address, constant.WriteUartBaudRate,
                data[0], data[1], data[2], data[3]]
@@ -369,7 +606,9 @@ class SoloMotorController:
 
     def start_enc_hallCalibration(self, cal: int) -> bool:
         if (cal < 0 or cal > 2):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        cal = int(cal)
         data = self.__convert_to_data(cal)
         cmd = [self._address, constant.WriteStartENCHallCalibration,
                data[0], data[1], data[2], data[3]]
@@ -377,7 +616,9 @@ class SoloMotorController:
 
     def set_enc_hallCCW_offset(self, offset: float) -> bool:
         if (offset <= 0 or offset >= 1):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        offset = float(offset)
         data = self.__convert_to_data(offset)
         cmd = [self._address, constant.WriteSetENCHallCCWOffset,
                data[0], data[1], data[2], data[3]]
@@ -385,9 +626,41 @@ class SoloMotorController:
 
     def set_enc_HallCW_offset(self, offset: float) -> bool:
         if (offset <= 0 or offset >= 1):
+            self._logger.info(constant.InputOutOfRange) 
             return False
+        offset = float(offset)
         data = self.__convert_to_data(offset)
         cmd = [self._address, constant.WriteSetENCHallCWOffset,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_speed_acceleration_value(self, accelerationValue: float) -> bool:
+        if (accelerationValue < 0 or accelerationValue > 1600):
+            self._logger.info(constant.InputOutOfRange) 
+            return False
+        accelerationValue = float(accelerationValue)
+        data = self.__convert_to_data(accelerationValue)
+        cmd = [self._address, constant.WriteSpeedAccelerationValue,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_speed_deceleration_value(self, decelerationValue: float) -> bool:
+        if (decelerationValue < 0 or decelerationValue > 1600):
+            self._logger.info(constant.InputOutOfRange) 
+            return False
+        decelerationValue = float(decelerationValue)
+        data = self.__convert_to_data(decelerationValue)
+        cmd = [self._address, constant.WriteSpeedDecelerationValue,
+               data[0], data[1], data[2], data[3]]
+        return self.__exec_cmd(cmd)
+
+    def set_can_bus_baudrate(self, baudrate: int) -> bool:
+        if (baudrate < 0 or baudrate > 4):
+            self._logger.info(constant.InputOutOfRange) 
+            return False
+        baudrate = int(baudrate)
+        data = self.__convert_to_data(baudrate)
+        cmd = [self._address, constant.WriteCanBusBaudRate,
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
@@ -664,7 +937,7 @@ class SoloMotorController:
             return self.__convert_to_long(data)
         else:
             return -1
-
+        
     def get_firmware_version(self) -> int:
         cmd = [self._address, constant.ReadFirmwareVersion,
                0x00, 0x00, 0x00, 0x00]
@@ -816,5 +1089,32 @@ class SoloMotorController:
         if(self.__exec_cmd(cmd)):
             data = self.__get_data(cmd)
             return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_speed_acceleration_value(self) -> float:
+        cmd = [self._address, constant.ReadSpeedAccelerationValue,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_speed_deceleration_value(self) -> float:
+        cmd = [self._address, constant.ReadSpeedDecelerationValue,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_float(data)
+        else:
+            return -1
+
+    def get_can_bus_baudrate(self) -> int:
+        cmd = [self._address, constant.ReadCanBusBaudRate,
+               0x00, 0x00, 0x00, 0x00]
+        if(self.__exec_cmd(cmd)):
+            data = self.__get_data(cmd)
+            return self.__convert_to_long(data)
         else:
             return -1

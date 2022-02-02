@@ -57,7 +57,7 @@ class POSITION_SENSOR_CALIBRATION_ACTION (Enum):
     HALL_SENSOR_START_CALIBRATION  = 2 
 
 
-class SoloMotorController3:
+class SoloMotorController:
 
     def __init__(
         self,

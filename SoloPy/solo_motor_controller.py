@@ -1,4 +1,5 @@
 import serial
+import string
 import SoloPy.constant as constant
 import math
 import time
@@ -61,13 +62,13 @@ class SoloMotorController:
 
     def __init__(
         self,
-        address,
+        address=0,
         baudrate=937500,
         port="/dev/ttyS0",
         timeout=3,
         loggerLevel=logging.INFO):
 
-        self._version = "SoloPy v2.0"
+        self._version = "SoloPy v2.1"
         
         # logger init
         logging.shutdown()

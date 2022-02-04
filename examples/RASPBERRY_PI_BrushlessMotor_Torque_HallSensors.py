@@ -8,14 +8,11 @@
 #   The Motor used for Testings: DB56C036030-A
 # _________________________________________________________________________________________________
 
-# Importing PYTHON RASPBERRY-PI library
-from SoloPy import solo_motor_controller as solo
+#Importing SoloPy
+import SoloPy as solo
+
 import time
 import sys
-
-
-# the device address of SOLO
-__solo_address = 0
 
 # For this Test, make sure you have calibrated your HALL sensors before
 # to know more please read: https: // www.solomotorcontrollers.com/hall-sensors-to-solo-for-controlling-speed-torque-brushless-motor/
@@ -27,156 +24,78 @@ __solo_address = 0
 #  PIN 5 Down: closed-loop
 #  PIN 3 UP(Not in DFU mode)
 
-# ____________________________________________________________________
-# High Speed High Performance Baudrate (Recommended)
-# Use this baudrate to have the best and real performance
-# of SOLO under all conditions 937500;
-baudrate = 937500
-
-# Low Speed Low Performance Baudrate
-# Use this baudrate only for devices that don't support
-# 937500 or 921600 baudrates.
-#baudrate = 115200
-# _____________________________________________________________________
-
-# Desired Switching or PWM Frequency at Output in kHz
-pwm_frequency = 22
-
-# Motor's Number of Poles
-numberOfPoles = 8
-
-# Select the Normal BLDC_PMSM motor type
-motor_type = 1
-
-# Current Limit of the Motor
-current_limit = 12.5
-
-# Define Desired Torque referrrence
-desired_torque_iq = 0.0
-
-# Define Desired Speed referrrence
-desired_motor_speed = 0
-
-# Battery or Bus Voltage
-bus_voltage = 0
-
-# Motor speed feedback
-actual_motor_speed = 0
-
-# Motor Iq(torque) feedback
-actual_motor_torque_iq = 0.0
-
 
 def __loop():
-
-    # set the Direction on C.W.
-    __solo_driver.set_direction(0)
-    
-    #set desired Iq ( torque ) in Amps
-    desired_torque_iq = 2.258
-    __solo_driver.set_torque_reference(desired_torque_iq)
+    mySolo.set_motor_direction(solo.DIRECTION.CLOCKWISE)
+    mySolo.set_torque_reference_iq(2.258)
 
     # wait till motor reaches to the reference
     time.sleep(1)
 
-    actual_motor_torque_iq = __solo_driver.get_quadrature_current()
-    print("\n Actual Motor Iq: \n", actual_motor_torque_iq)
-    
-    actual_motor_speed = __solo_driver.get_speed()
-    print("\n Motor Speed: \n", actual_motor_speed)
-    
-    # wait 
+    print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
+    print("Motor Speed: " + str(mySolo.get_speed_feedback()))
     time.sleep(3)
     
-    # stop the motor
-    desired_torque_iq = 0.0
-    __solo_driver.set_torque_reference(desired_torque_iq)
-    time.sleep(1)
-    
-    actual_motor_torque_iq = __solo_driver.get_quadrature_current()
-    print("\n Actual Motor Iq: \n", actual_motor_torque_iq)
-    
-    actual_motor_speed = __solo_driver.get_speed()
-    print("\n Motor Speed: \n", actual_motor_speed)
-    
-    # set the Direction on C.C.W.
-    __solo_driver.set_direction(1)
-    
-    #set desired Iq ( torque ) in Amps
-    desired_torque_iq = 3.512
-    __solo_driver.set_torque_reference(desired_torque_iq)
+    mySolo.set_torque_reference_iq(0)
 
     # wait till motor reaches to the reference
     time.sleep(1)
 
-    actual_motor_torque_iq = __solo_driver.get_quadrature_current()
-    print("\n Actual Motor Iq: \n", actual_motor_torque_iq)
+    print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
+    print("Motor Speed: " + str(mySolo.get_speed_feedback()))
     
-    actual_motor_speed = __solo_driver.get_speed()
-    print("\n Motor Speed: \n", actual_motor_speed)
-    
-    # wait 
+    mySolo.set_motor_direction(solo.DIRECTION.COUNTERCLOCKWISE)
+    mySolo.set_torque_reference_iq(3.512)
+
+    # wait till motor reaches to the reference
+    time.sleep(1)
+
+    print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
+    print("Motor Speed: " + str(mySolo.get_speed_feedback()))
     time.sleep(3)
 
-    # stop the motor
-    desired_torque_iq = 0.0
-    __solo_driver.set_torque_reference(desired_torque_iq)
+    mySolo.set_torque_reference_iq(0)
+
+    # wait till motor reaches to the reference
     time.sleep(1)
     
-    actual_motor_torque_iq = __solo_driver.get_quadrature_current()
-    print("\n Actual Motor Iq: \n", actual_motor_torque_iq)
-    
-    actual_motor_speed = __solo_driver.get_speed()
-    print("\n Motor Speed: \n", actual_motor_speed)
-    
-    # wait 
+    print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
+    print("Motor Speed: " + str(mySolo.get_speed_feedback()))
     time.sleep(3)
 
 
 def __setup():
-    # Initialize the SOLO object using the device address of SOLO at 0
-    global __solo_driver
-    __solo_driver = solo.SoloMotorController(__solo_address, baudrate)
+    global mySolo
 
-    time.sleep(2)
+    # Initialize the SOLO object 
+    mySolo = solo.SoloMotorController()
 
-    bus_voltage = __solo_driver.get_bus_voltage()
-    while bus_voltage <= 0:
-        # wait here till communication is established
-        bus_voltage = __solo_driver.get_bus_voltage()
-        print("\n Trying to Connect To SOLO")
+    # wait here till communication is established
+    while mySolo.serial_is_working() == False:
         time.sleep(1)
-
-    print("\n Communication Established succuessfully!")
+    print("Communication Established succuessfully!")
 
     # Initial Configurations
-    __solo_driver.set_pwm_frequency(pwm_frequency)
-    __solo_driver.set_current_limit(current_limit)
-
-    # select Digital Mode
-    __solo_driver.set_command_mode(1)
-
-    __solo_driver.set_motor_type(motor_type)
+    mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
+    mySolo.set_motor_type(solo.MOTOR_TYPE.BLDC_PMSM)
+    mySolo.set_output_pwm_frequency_khz(22)
+    mySolo.set_current_limit(12.5)
 
     # run the motor identification
     # run ID. always after selecting the Motor Type!
-    # Torque Controller Gains are tuned after Identification automatically
-    __solo_driver.set_identification(1)
-
-    print("\n Identifying the Motor")
-
+    print("Identifying the Motor")
+    mySolo.motor_parameters_identification(solo.ACTION.START)
     # wait at least for 2sec till ID. is done
     time.sleep(3)
 
-    # Operate in Hall Sensor Mode
-    __solo_driver.set_speed_control_mode(2)
 
-    # Control The Torque
-    __solo_driver.set_control_mode(1)
+    mySolo.set_control_mode(solo.CONTROL_MODE.TORQUE_MODE)
+    mySolo.set_feedback_control_mode(solo.FEEDBACK_CONTROL_MODE.HALL_SENSORS)
+    mySolo.set_motor_poles_counts(8)
 
-    # Set the Number of Poles 
-    __solo_driver.set_number_of_poles(numberOfPoles)
-    
+    # Speed Controller Tunings
+    mySolo.set_speed_controller_kp(0.6)
+    mySolo.set_speed_controller_ki(0.008)
 
     while True:
         __loop()

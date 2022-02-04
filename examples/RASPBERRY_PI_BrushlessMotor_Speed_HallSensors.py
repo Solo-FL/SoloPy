@@ -24,14 +24,43 @@ import sys
 #  PIN 5 Down: closed-loop
 #  PIN 3 UP(Not in DFU mode)
 
-def __loop():
+# Initialize the SOLO object 
+mySolo = solo.SoloMotorController()
 
+# wait here till communication is established
+while mySolo.serial_is_working() == False:
+    time.sleep(1)
+print("Communication Established succuessfully!")
+
+# Initial Configurations
+mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
+mySolo.set_motor_type(solo.MOTOR_TYPE.BLDC_PMSM)
+mySolo.set_output_pwm_frequency_khz(22)
+mySolo.set_current_limit(12.5)
+
+# run the motor identification
+# run ID. always after selecting the Motor Type!
+print("\n Identifying the Motor")
+mySolo.motor_parameters_identification(solo.ACTION.START)
+# wait at least for 2sec till ID. is done
+time.sleep(3)
+
+mySolo.set_control_mode(solo.CONTROL_MODE.SPEED_MODE)
+mySolo.set_feedback_control_mode(solo.FEEDBACK_CONTROL_MODE.HALL_SENSORS)
+mySolo.set_motor_poles_counts(8)
+
+# Speed Controller Tunings
+mySolo.set_speed_controller_kp(0.6)
+mySolo.set_speed_controller_ki(0.008)
+# Initial Configurations end
+
+# loop actions
+while True:
     mySolo.set_motor_direction(solo.DIRECTION.CLOCKWISE)
     mySolo.set_speed_reference(1000)
 
     # wait till motor reaches to the reference
     time.sleep(1)
-
 
     print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
     print("Motor Speed: " + str(mySolo.get_speed_feedback()))
@@ -60,48 +89,3 @@ def __loop():
     print("Actual Motor Iq: "+ str(mySolo.get_quadrature_current_iq_feedback()))
     print("Motor Speed: " + str(mySolo.get_speed_feedback()))
     time.sleep(3)
-
-
-def __setup():
-    global mySolo
-
-    # Initialize the SOLO object 
-    mySolo = solo.SoloMotorController()
-
-    # wait here till communication is established
-    while mySolo.serial_is_working() == False:
-        time.sleep(1)
-    print("Communication Established succuessfully!")
-
-    # Initial Configurations
-    mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
-    mySolo.set_motor_type(solo.MOTOR_TYPE.BLDC_PMSM)
-    mySolo.set_output_pwm_frequency_khz(22)
-    mySolo.set_current_limit(12.5)
-
-    # run the motor identification
-    # run ID. always after selecting the Motor Type!
-    print("\n Identifying the Motor")
-    mySolo.motor_parameters_identification(solo.ACTION.START)
-    # wait at least for 2sec till ID. is done
-    time.sleep(3)
-
-
-    mySolo.set_control_mode(solo.CONTROL_MODE.SPEED_MODE)
-    mySolo.set_feedback_control_mode(solo.FEEDBACK_CONTROL_MODE.HALL_SENSORS)
-    mySolo.set_motor_poles_counts(8)
-
-    # Speed Controller Tunings
-    mySolo.set_speed_controller_kp(0.6)
-    mySolo.set_speed_controller_ki(0.008)
-
-    while True:
-        __loop()
-
-
-def do_work():
-    __setup()
-
-
-if __name__ == "__main__":
-    do_work()

@@ -68,7 +68,7 @@ class SoloMotorController:
         timeout=3,
         loggerLevel=logging.INFO):
 
-        self._version = "SoloPy v2.1"
+        self._version = "SoloPy v2.3"
         
         # logger init
         logging.shutdown()

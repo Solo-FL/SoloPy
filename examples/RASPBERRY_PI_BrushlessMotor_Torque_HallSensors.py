@@ -1,7 +1,7 @@
 #   Title: Torque Control of a Brushless Motor with RASPBERRY-PI and SOLO using HALL sensors
 #   Author: SOLOMOTORCONTROLLERS
 #   Date: 2021
-#   Code version: 1.0.0
+#   Code version: 2.0.0
 #   Availability: https://github.com/Solo-FL/SoloPy/
 #   Please make sure you are applying the right wiring between SOLO and your RASPBERRY-PI
 #   The Code below has been tested on RASPBERRY-PI 4B

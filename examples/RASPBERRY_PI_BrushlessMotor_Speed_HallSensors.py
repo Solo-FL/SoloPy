@@ -66,7 +66,7 @@ def __setup():
     global mySolo
 
     # Initialize the SOLO object 
-    mySolo = solo.SoloMotorController(port="COM3")
+    mySolo = solo.SoloMotorController()
 
     # wait here till communication is established
     while mySolo.serial_is_working() == False:

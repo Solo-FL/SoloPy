@@ -68,7 +68,7 @@ class SoloMotorController:
         timeout=3,
         loggerLevel=logging.INFO):
 
-        self._version = "SoloPy v2.3"
+        self._version = "SoloPy v2.4"
         
         # logger init
         logging.shutdown()
@@ -344,7 +344,7 @@ class SoloMotorController:
         return status
         
     def serial_is_working(self) -> bool:
-        if(self.get_voltage_a() == -1):
+        if(self.get_phase_a_voltage() == -1):
             return False
         return True
 

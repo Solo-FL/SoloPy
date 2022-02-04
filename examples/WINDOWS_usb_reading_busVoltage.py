@@ -7,5 +7,5 @@ import time
 
 mySolo = solo.SoloMotorController(port="COM3")
 while True:
-    print("\n Read from SOLO -> BusVoltage: \n" + str(mySolo.get_bus_voltage()))
+    print("Read from SOLO -> BusVoltage: " + str(mySolo.get_bus_voltage()))
     time.sleep(1)

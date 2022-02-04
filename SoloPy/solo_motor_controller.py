@@ -62,9 +62,9 @@ class SoloMotorController:
 
     def __init__(
         self,
+        port="/dev/ttyS0",
         address=0,
         baudrate=937500,
-        port="/dev/ttyS0",
         timeout=3,
         loggerLevel=logging.INFO):
 

@@ -1,2 +1,2 @@
-from SoloPy.solo_motor_controller import *
-import SoloPy.constant 
+from .SOLOMotorControllersUart import *
+from .SOLOMotorControllersCanopen import *

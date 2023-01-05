@@ -1,0 +1,4 @@
+include SoloPy\*.py
+include README.rst
+include setup.cfg
+include setup.py

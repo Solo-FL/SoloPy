@@ -1,0 +1,33 @@
+# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Title: SoloPy
+# Author: SOLOMotorControllers
+# Date: 2023
+# Code version: 3.0.0
+# Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
+# This Library is made by SOLOMotorControllers.COM
+# please visit:  https://www.SOLOMotorControllers.com/
+
+# EXAMPLE of how read the SOLO board temperature,
+# every second we print the value of the temperature
+
+import SoloPy as solo
+
+import time
+
+# RUN IT BEFORE TEST THE CODE ON RASPBERRY PI:
+# sudo ip link set can0 up type can bitrate 1000000
+# instanciate a SOLO object:
+mySolo = solo.SOLOMotorControllersCanopen(0, solo.CAN_BUS_BAUD_RATE.RATE_1000)
+
+# loop actions
+while True:
+    # reading
+    temperature, error = mySolo.get_board_temperature()
+
+    # print
+    print("Read from SOLO: " + str(temperature))
+    print("Error: " + str(error))
+
+    time.sleep(1)

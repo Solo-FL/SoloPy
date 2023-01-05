@@ -124,7 +124,7 @@ then go to reboot
 
 - The bit-rate has to be the same as the one used in the code
 
-- The following CAN transciever module  `"PiCAN2" <https://copperhilltech.com/pican-2-can-bus-interface-for-raspberry-pi/>`__ has been used to test the library: 
+- The following CAN transceiver module  `"PiCAN2" <https://copperhilltech.com/pican-2-can-bus-interface-for-raspberry-pi/>`__ has been used to test the library 
 
 
 Dependencies

@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'SoloPy',        
   packages = ['SoloPy'],  
-  version = 'v3.0.0',      
+  version = 'v3.1.0',      
   license='gpl-3.0',      
   description = 'PYTHON Library for Control Solo Motor',   
   author = 'Solo',                  
   author_email = 'support@solomotorcontrollers.com',      
   url = 'https://github.com/Solo-FL/SoloPy',   
-  download_url = 'https://github.com/Solo-FL/SoloPy/archive/refs/tags/v3.0.0.tar.gz',    
+  download_url = 'https://github.com/Solo-FL/SoloPy/archive/refs/tags/v3.1.0.tar.gz',    
   keywords = ['Solo Motor controllers', 'Solo', 'SoloPy'],   
   install_requires=[           
           'pyserial',

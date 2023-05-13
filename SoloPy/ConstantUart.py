@@ -4,7 +4,7 @@
 # Title: SoloPy
 # Author: SOLOMotorControllers
 # Date: 2023
-# Code version: 3.0.0
+# Code version: 3.1.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -64,6 +64,14 @@ WriteEncoderHallCwOffset = 0x29
 WriteSpeedAccelerationValue = 0x2A
 WriteSpeedDecelerationValue = 0x2B
 WriteCanBusBaudRate = 0x2C
+WriteCanBusBaudRate = 0x2C
+WriteASRDC =                         0x2D
+WriteMotionProfileMode =             0x30
+WriteMotionProfileVariable1 =         0x31
+WriteMotionProfileVariable2 =        0x32
+WriteMotionProfileVariable3 =        0x33
+WriteMotionProfileVariable4 =        0x34
+WriteMotionProfileVariable5 =        0x35
 
 ReadDeviceAddress = 0x81
 ReadPhaseAVoltage = 0x82
@@ -124,4 +132,11 @@ ReadUartBaudRate = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )
 ReadSpeedAccelerationValue = 0xB4
 ReadSpeedDecelerationValue = 0xB5
 ReadCanBusBaudRate = 0xB6
+ReadASRDC =                           0xB7
 ReadEncoderIndexCounts = 0xB8
+ReadMotionProfileMode =               0xBB
+ReadMotionProfileVariable1 =         0xBC
+ReadMotionProfileVariable2 =         0xBD
+ReadMotionProfileVariable3 =         0xBE
+ReadMotionProfileVariable4 =         0xBF
+ReadMotionProfileVariable5 =         0xC0

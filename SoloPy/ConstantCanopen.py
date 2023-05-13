@@ -4,7 +4,7 @@
 # Title: SoloPy
 # Author: SOLOMotorControllers
 # Date: 2023
-# Code version: 3.0.0
+# Code version: 3.1.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -74,3 +74,10 @@ Object_BoardTemperature = 0x3039
 Object_DeviceFirmwareVersion = 0x303A
 Object_DeviceHardwareVersion = 0x303B
 Object_EncoderIndexCounts = 0x303D
+Object_ASRDC =                                   0x303E
+Object_MotionProfileMode =                       0x303F
+Object_MotionProfileVariable1 =                  0x3040
+Object_MotionProfileVariable2 =                  0x3041
+Object_MotionProfileVariable3 =                  0x3042
+Object_MotionProfileVariable4 =                  0x3043
+Object_MotionProfileVariable5 =                  0x3044

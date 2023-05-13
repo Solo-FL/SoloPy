@@ -4,7 +4,7 @@
 # Title: SoloPy
 # Author: SOLOMotorControllers
 # Date: 2023
-# Code version: 3.0.0
+# Code version: 3.1.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -56,7 +56,13 @@ def tests():
     assert True == general_setget_test_round(mySolo.set_encoder_hall_cw_offset, mySolo.get_encoder_hall_cw_offset, round(random.uniform(0.1, 1), 2))
     assert True == general_setget_test_round(mySolo.set_speed_acceleration_value, mySolo.get_speed_acceleration_value, round(random.uniform(1, 10), 0), 0)
     assert True == general_setget_test_round(mySolo.set_speed_deceleration_value, mySolo.get_speed_deceleration_value, round(random.uniform(1, 10), 0), 0)
-
+    assert True == general_setget_test_round(mySolo.set_analogue_speed_resolution_division_coefficient, mySolo.get_analogue_speed_resolution_division_coefficient, round(random.uniform(1.1, 5.5), 2))
+    assert True == general_setget_test(mySolo.set_motion_profile_mode, mySolo.get_motion_profile_mode, solo.MOTION_PROFILE_MODE.TIME_BASE_STCURVE)
+    assert True == general_setget_test_round(mySolo.set_motion_profile_variable1, mySolo.get_motion_profile_variable1, round(random.uniform(1.1, 5.1), 2))
+    assert True == general_setget_test_round(mySolo.set_motion_profile_variable2, mySolo.get_motion_profile_variable2, round(random.uniform(1.1, 5.1), 2))
+    assert True == general_setget_test_round(mySolo.set_motion_profile_variable3, mySolo.get_motion_profile_variable3, round(random.uniform(1.1, 5.1), 2))
+    assert True == general_setget_test_round(mySolo.set_motion_profile_variable4, mySolo.get_motion_profile_variable4, round(random.uniform(1.1, 5.1), 2))
+    assert True == general_setget_test_round(mySolo.set_motion_profile_variable5, mySolo.get_motion_profile_variable5, round(random.uniform(1.1, 5.1), 2))
 
 def general_setget_test_round(functionSet, functionGet, valueToSet, rnd=2):
     isSet, error = functionSet(valueToSet)

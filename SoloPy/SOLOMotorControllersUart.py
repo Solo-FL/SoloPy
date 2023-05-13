@@ -30,8 +30,6 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
             timeout=3,
             loggerLevel=logging.INFO):
 
-        self._version = "SoloPy v3.0"
-
         # logger init
         logging.shutdown()
         reload(logging)
@@ -145,9 +143,6 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
         return False, ERROR.GENERAL_ERROR
 
     # #############################Support############################# #
-    def version(self) -> string:
-        return self._version
-
     def serial_open(self) -> bool:
         self._logger.debug("serial_open start")
         try:

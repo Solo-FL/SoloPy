@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions for the Solo Uart Drivers 
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2023
-#  @version 3.1.0
+#  @version 3.1.1
 
 ## @attention
 # Copyright: (c) 2021-2023 SOLO motor controllers project
@@ -50,57 +50,45 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
                 self._baudrate = 115200
         self._port = port
         self._timeout = timeout
-        self._ser_status = 0
         self._ser = None
         self.serial_open()
         # TODO try solving serial error
 
     def __del__(self):
         self._logger.debug('SoloMotorController DEL')
-        if (self._ser_status == 1):
-            self._logger.debug('Serial close')
-            try:
-                self._ser.close()
-            except Exception as e:
-                self._logger.error("Exception on Serial Closure")
-                # self._logger.error( e, exc_info=True)
+        self.serial_close()
 
     def __exec_cmd(self, cmd: list) -> list[bool, ERROR]:
-        if (self._ser_status == 1):
+        self.serial_open()
+
+        _cmd = [ConstantUart.INITIATOR, ConstantUart.INITIATOR,
+                cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], ConstantUart.CRC, ConstantUart.ENDING]
+
+        _readPacket = []
+
+        messageLog = "WRITE: " + str([
+            hex(ConstantUart.INITIATOR), hex(ConstantUart.INITIATOR),
+            hex(cmd[0]), hex(cmd[1]), hex(cmd[2]), hex(
+                cmd[3]), hex(cmd[4]), hex(cmd[5]),
+            hex(ConstantUart.CRC), hex(ConstantUart.ENDING)])
+        self._logger.debug(messageLog)
+
+        for attempts in range(5):
             try:
-                messageLog = "Serial connection is: " + str(self._ser.isOpen())
-                self._logger.debug(messageLog)
-                if (not self._ser.isOpen()):
-                    self._logger.debug("Serial open")
-                    self._ser.open()
-                    self._logger.debug("Serial flush")
-                    self._ser.flush()
-                    self._ser.flushInput()
-                    self._ser_status = 1
-
-                _cmd = [ConstantUart.INITIATOR, ConstantUart.INITIATOR,
-                        cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], ConstantUart.CRC, ConstantUart.ENDING]
-
-                _readPacket = []
-
-                messageLog = "WRITE: " + str([
-                    hex(ConstantUart.INITIATOR), hex(ConstantUart.INITIATOR),
-                    hex(cmd[0]), hex(cmd[1]), hex(cmd[2]), hex(
-                        cmd[3]), hex(cmd[4]), hex(cmd[5]),
-                    hex(ConstantUart.CRC), hex(ConstantUart.ENDING)])
-                self._logger.debug(messageLog)
-
                 self._ser.write(_cmd)
 
                 # Time to ensure the writing, reducing it can make the comunication instable
                 time.sleep(0.1)
 
                 # read up to ten bytes (timeout)
-                _readPacket = self._ser.read(10)
-                messageLog = "READ: " + \
-                    str([hex(i) for i in _readPacket]) + \
-                    " size: " + str(len(_readPacket))
-                self._logger.debug(messageLog)
+                while self._ser.in_waiting> 0:
+                    _readPacket = self._ser.read(10)
+
+                    messageLog = "READ: " + \
+                        str([hex(i) for i in _readPacket]) + \
+                        " size: " + str(len(_readPacket))
+                    self._logger.debug(messageLog)
+
                 if (len(_readPacket) == 0):
                     self._ser.flush()
 
@@ -108,83 +96,80 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
                         _readPacket[0] == _cmd[0] and
                         _readPacket[1] == _cmd[1] and
                         (_readPacket[2] == _cmd[2] or _cmd[2] == 0xFF) and
-                        _readPacket[3] == _cmd[3] and
                         _readPacket[8] == _cmd[8] and
                         _readPacket[9] == _cmd[9]):
-                    cmd[0] = _readPacket[2]
-                    cmd[1] = _readPacket[3]
-                    cmd[2] = _readPacket[4]
-                    cmd[3] = _readPacket[5]
-                    cmd[4] = _readPacket[6]
-                    cmd[5] = _readPacket[7]
-                else:
-                    cmd[0] = 0xEE
-                    cmd[1] = 0xEE
-                    cmd[2] = 0xEE
-                    cmd[3] = 0xEE
-                    cmd[4] = 0xEE
-                    cmd[5] = 0xEE
-
-                if (cmd[2] == ConstantUart.ERROR and
-                    cmd[3] == ConstantUart.ERROR and
-                    cmd[4] == ConstantUart.ERROR and
-                        cmd[5] == ConstantUart.ERROR):
-                    return False, ERROR.GENERAL_ERROR
-                else:
-                    return True, ERROR.NO_ERROR_DETECTED
+                    if (_readPacket[3] == _cmd[3]):
+                        cmd[0] = _readPacket[2]
+                        cmd[1] = _readPacket[3]
+                        cmd[2] = _readPacket[4]
+                        cmd[3] = _readPacket[5]
+                        cmd[4] = _readPacket[6]
+                        cmd[5] = _readPacket[7]
+                        return True, ERROR.NO_ERROR_DETECTED
+                    else:
+                        continue
             except Exception as e:
                 self._logger.debug('__exec_cmd Exception')
                 self._logger.debug(e, exc_info=True)
-                self.serial_error_handler()
-                return False, ERROR.GENERAL_ERROR
+            time.sleep(0.1) 
 
-        self._logger.info("Serial status not ready")
-        self.serial_open()
+        cmd[0] = 0xEE
+        cmd[1] = 0xEE
+        cmd[2] = 0xEE
+        cmd[3] = 0xEE
+        cmd[4] = 0xEE
+        cmd[5] = 0xEE
+        self.serial_close()
         return False, ERROR.GENERAL_ERROR
 
-    # #############################Support############################# #
+    # #############################Support##############################
     def serial_open(self) -> bool:
-        self._logger.debug("serial_open start")
-        try:
-            self._ser = serial.Serial(
-                self._port, self._baudrate, timeout=self._timeout, writeTimeout=self._timeout)
-            self._ser_status = 1
+        if(self._ser is None):
+            self._logger.debug("serial_open start")
+            try:
+                self._ser = serial.Serial(
+                    self._port, self._baudrate, timeout=self._timeout, writeTimeout=self._timeout)
+                self._ser_status = 1
 
-            # Time sleep for ensure serial initialization
-            time.sleep(0.2)
+                # Time sleep for ensure serial initialization
+                time.sleep(self._timeout)
 
-        except Exception as e:
-            self._logger.error(
-                "serial_open: Exception during the serial inizialisation")
-            # self._logger.error( e, exc_info=True)
-            self._ser_status = -1
-            # raise e
-            return False
+                self._logger.debug("Serial init")
+                self._ser.bytesize = serial.EIGHTBITS
+                self._ser.parity = serial.PARITY_NONE
+                self._ser.stopbits = serial.STOPBITS_ONE
+                time.sleep(0.2)
 
-        if (self._ser_status == 1):
-            self._logger.debug("Serial init")
-            self._ser.bytesize = serial.EIGHTBITS
-            self._ser.parity = serial.PARITY_NONE
-            self._ser.stopbits = serial.STOPBITS_ONE
-            time.sleep(0.2)
-            if (not self._ser.isOpen()):
-                self._logger.debug("Serial open")
-                self._ser.open()
+                self._logger.debug("Serial flush")
+                self._ser.reset_input_buffer()
+                self._ser.reset_output_buffer()
+                time.sleep(self._timeout)
 
-            self._ser.flush()
-            self._ser.flushInput()
-            self._logger.info("serial_open: success")
-            self._logger.debug("serial_open end")
-            return True
+            except Exception as e:
+                self._logger.error(
+                    "serial_open: Exception during the serial inizialisation")
+                # self._logger.error( e, exc_info=True)
+                # raise e
+                return False
+
+        if (not self._ser.is_open):  #pyserial automatic open
+            self._logger.debug("Serial open")
+            self._ser.open()
+            time.sleep(self._timeout)
+
+            self._logger.debug("Serial flush")
+            self._ser.reset_input_buffer()
+            self._ser.reset_output_buffer()
+            time.sleep(self._timeout*2)
 
         self._logger.debug("serial_open end")
-        return False
+        return True
 
     def serial_error_handler(self) -> bool:
         self._logger.debug('SEH start')
         try:
             try:
-                if (self._ser.isOpen()):
+                if (self._ser.is_open):
                     self._logger.debug('SEH: serial is open')
                     if (self._ser.inWaiting() > 0):
                         self._logger.debug('SEH: clean buffers')
@@ -213,50 +198,45 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
     def serial_close(self) -> bool:
         self._logger.debug("serial_close start")
 
-        if (self._ser_status == 1):
+        if self._ser is None:
+            self._logger.debug("serial_close: Serial not exist")
+            return True
+        elif not self._ser.is_open:
+            self._logger.debug("serial_close: Serial is already close")
+            return True
+        
+        if self._ser.is_open:
             try:
                 self._ser.close()
-                self._logger.info("serial_close: Serial closed")
-                self._ser_status = 0
+                self._ser = None
+                time.sleep(self._timeout*2)
+                self._logger.debug("serial_close: Serial closed")
                 return True
             except Exception as e:
                 self._logger.error("serial_close: Exception on Serial Closure")
                 # self._logger.error( e, exc_info=True)
-                self._ser_status = -1
                 return False
 
-        if (self._ser_status == 0):
-            self._logger.info("serial_close: Serial is already close")
-        if (self._ser_status == -1):
-            self._logger.info("serial_close: Serial is in error")
-        self._logger.debug("serial_close end")
         return False
 
     def serial_status(self) -> string:
         status = ''
-        if (self._ser_status == 1):
+        if not(self._ser is None) and self._ser.is_open:
             status += 'SPS: Serial Open'
             try:
-                status += '\nSPS: Serial comunication open: ' + \
-                    str(self._ser.isOpen())
-                if (self._ser.isOpen()):
-                    status += '\nSPS: Serial input buffer size: ' + \
-                        str(self._ser.out_waiting)
-                    status += '\nSPS: Serial output buffer size: ' + \
-                        str(self._ser.inWaiting())
+                status += '\nSPS: Serial out buffer size: ' + \
+                str(self._ser.out_waiting)
+                status += '\nSPS: Serial in buffer size: ' + \
+                str(self._ser.in_waiting)
+                self._logger.debug(status)
             except Exception as e:
                 self._logger.error('exception on printing the status')
                 # self._logger.error( e, exc_info=True)
 
-        if (self._ser_status == 0):
-            status += 'SPS: Serial Close'
-
-        if (self._ser_status == -1):
-            status += 'SPS: Serial on Error'
         return status
 
     def serial_is_working(self) -> bool:
-        if (self.get_phase_a_voltage() == -1):
+        if self.get_phase_a_voltage() == -1:
             return False
         return True
 

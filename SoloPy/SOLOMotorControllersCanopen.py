@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions for the Solo Canopen Drivers 
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2023
-#  @version 3.1.0
+#  @version 3.1.1
 
 ## @attention
 # Copyright: (c) 2021-2023 SOLO motor controllers project
@@ -72,6 +72,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
 
             bus.send(msg)
             informationReceived = bus.recv(1)
+            bus.shutdown()
             # Abort Checking
             if      ( informationReceived.arbitration_id == (0x580 + address)                   # Check COB-ID
                 and ( informationReceived.data[0] == 0x80 )                                     # Check Byte1  
@@ -129,7 +130,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
                 is_extended_id=False)
 
             bus.send(msg)
-
+            bus.shutdown()
         except can.exceptions.CanInitializationError :
             error = ERROR.CAN_INITIALIZATION_ERROR
             result = False
@@ -166,6 +167,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
 
             bus.send(msg)
             informationReceived = bus.recv(1)  # Timeout in seconds.
+            bus.shutdown()
             if (informationReceived == None):    # No unit response
                 result = False
                 error = ERROR.GENERAL_ERROR
@@ -217,6 +219,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
                 channel=self._channel, bustype=self._bustype, bitrate=self._baudrate)
 
             informationReceived = bus.recv(1)  # Timeout in seconds.
+            bus.shutdown()
             if (informationReceived == None):    # No unit response
                 result = False
                 error = ERROR.GENERAL_ERROR
@@ -243,7 +246,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
 # ---------------------Write---------------------
 # -----------------------------------------------
 
-    def set_guard_time(self, guard_time: int) -> list[bool, ERROR]:
+    def set_guard_time(self, guard_time: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_guard_time_input_validation(guard_time)
         if (InputValidate is False):
@@ -254,7 +257,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
             self._address, ConstantCanopen.Object_GuardTime, informationToSend)
         return result, error
 
-    def set_life_time_factor(self, life_time_factor: int) -> list[bool, ERROR]:
+    def set_life_time_factor(self, life_time_factor: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_life_time_factor_input_validation(life_time_factor)
         if (InputValidate is False):
@@ -265,7 +268,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
             self._address, ConstantCanopen.Object_LifeTimeFactor, informationToSend)
         return result, error
 
-    def set_producer_heartbeat_time(self, producer_heartbeat_time: int) -> list[bool, ERROR]:
+    def set_producer_heartbeat_time(self, producer_heartbeat_time: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_producer_heartbeat_time_input_validation(producer_heartbeat_time)
         if (InputValidate is False):
@@ -282,7 +285,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #            .The method refers to the Object Dictionary: 0x3001
     #@param  device_address  address want to set for board       
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_device_address(self, device_address: int) -> list[bool, ERROR]:
+    def set_device_address(self, device_address: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_device_address_input_validation(device_address)
         if (InputValidate is False):
@@ -300,7 +303,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3002
     #@param  mode  enum that specify mode of the operation of SOLO      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_command_mode(self, mode: COMMAND_MODE) -> list[bool, ERROR]:
+    def set_command_mode(self, mode: COMMAND_MODE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_command_mode_input_validation(mode)
         if (InputValidate is False):
@@ -321,7 +324,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3003
     #@param  current_limit  a float value [Amps]     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_current_limit(self, current_limit: float) -> list[bool, ERROR]:
+    def set_current_limit(self, current_limit: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_current_limit_input_validation(current_limit)
         if (InputValidate is False):
@@ -338,7 +341,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3004
     #@param  torque_reference_iq  a float [Amps]      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_torque_reference_iq(self, torque_reference_iq: float) -> list[bool, ERROR]:
+    def set_torque_reference_iq(self, torque_reference_iq: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_torque_reference_iq_input_validation(torque_reference_iq)
         if (InputValidate is False):
@@ -355,7 +358,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3005
     #@param  speed_reference  a long value [RPM]      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_speed_reference(self, speed_reference: int) -> list[bool, ERROR]:
+    def set_speed_reference(self, speed_reference: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_reference_input_validation(speed_reference)
         if (InputValidate is False):
@@ -373,7 +376,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3006
     #@param  power_reference  a float value between 0 to 100       
     #@retval bool 0 fail / 1 for succes
-    def set_power_reference(self, power_reference: float) -> list[bool, ERROR]:
+    def set_power_reference(self, power_reference: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_power_reference_input_validation(power_reference)
         if (InputValidate is False):
@@ -391,7 +394,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3007
     #@param  powerReference  enum that specify Start or Stop of something in SOLO      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def motor_parameters_identification(self, identification: ACTION) -> list[bool, ERROR]:
+    def motor_parameters_identification(self, identification: ACTION) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = motor_parameters_identification_input_validation(identification)
         if (InputValidate is False):
@@ -412,7 +415,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        connected to the motor and it will cut the current floating into the Motor from SOLO 
     #          .The method refers to the Object Dictionary: 0x3008     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def emergency_stop(self) -> list[bool, ERROR]:
+    def emergency_stop(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         result, error = self.CANOpenTransmit(
@@ -426,7 +429,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3009
     #@param  output_pwm_frequency_khz  switching frequencies [kHz]      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_output_pwm_frequency_khz(self, output_pwm_frequency_khz: int) -> list[bool, ERROR]:
+    def set_output_pwm_frequency_khz(self, output_pwm_frequency_khz: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_output_pwm_frequency_khz_input_validation(output_pwm_frequency_khz)
         if (InputValidate is False):
@@ -445,7 +448,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300A
     #@param  speed_controller_kp  a float value between 0 to 300     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_speed_controller_kp(self, speed_controller_kp: float) -> list[bool, ERROR]:
+    def set_speed_controller_kp(self, speed_controller_kp: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_controller_kp_input_validation(speed_controller_kp)
         if (InputValidate is False):
@@ -463,7 +466,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300B
     #@param  speed_controller_ki  a float value between 0 to 300      
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]   
-    def set_speed_controller_ki(self, speed_controller_ki: float) -> list[bool, ERROR]:
+    def set_speed_controller_ki(self, speed_controller_ki: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_controller_ki_input_validation(speed_controller_ki)
         if (InputValidate is False):
@@ -482,7 +485,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300C
     #@param  motor_direction  enum that specify the direction of the rotation of the motor    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motor_direction(self, motor_direction: DIRECTION) -> list[bool, ERROR]:
+    def set_motor_direction(self, motor_direction: DIRECTION) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motor_direction_input_validation(motor_direction)
         if (InputValidate is False):
@@ -504,7 +507,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300D
     #@param  motor_resistance  a float value [Ohm]    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motor_resistance(self, motor_resistance: float) -> list[bool, ERROR]:
+    def set_motor_resistance(self, motor_resistance: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motor_resistance_input_validation(motor_resistance)
         if (InputValidate is False):
@@ -522,7 +525,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300E
     #@param  motor_inductance  a float value [Henry]   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motor_inductance(self, motor_inductance: float) -> list[bool, ERROR]:
+    def set_motor_inductance(self, motor_inductance: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motor_inductance_input_validation(motor_inductance)
         if (InputValidate is False):
@@ -539,7 +542,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x300F
     #@param  motor_poles_counts  a long value between 1 to 254     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motor_poles_counts(self, motor_poles_counts: int) -> list[bool, ERROR]:
+    def set_motor_poles_counts(self, motor_poles_counts: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motor_poles_counts_input_validation(motor_poles_counts)
         if (InputValidate is False):
@@ -557,7 +560,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3010
     #@param  incremental_encoder_lines  a long value [pre-quad]    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_incremental_encoder_lines(self, incremental_encoder_lines: int) -> list[bool, ERROR]:
+    def set_incremental_encoder_lines(self, incremental_encoder_lines: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_incremental_encoder_lines_input_validation(incremental_encoder_lines)
         if (InputValidate is False):
@@ -576,7 +579,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3011
     #@param  speed_limit  a long value [RPM]     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_speed_limit(self, speed_limit: int) -> list[bool, ERROR]:
+    def set_speed_limit(self, speed_limit: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_limit_input_validation(speed_limit)
         if (InputValidate is False):
@@ -593,7 +596,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3013
     #@param  mode  enum that specify the type of the feedback control SOLO   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_feedback_control_mode(self, mode: FEEDBACK_CONTROL_MODE) -> list[bool, ERROR]:
+    def set_feedback_control_mode(self, mode: FEEDBACK_CONTROL_MODE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_feedback_control_mode_input_validation(mode)
         if (InputValidate is False):
@@ -613,7 +616,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command resets SOLO to its factory setting to all the default parameters 
     #          .The method refers to the Object Dictionary: 0x3014  
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def reset_factory(self) -> list[bool, ERROR]:
+    def reset_factory(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         informationToSend = [0x00, 0x00, 0x00, 0x01]
         result, error = self.CANOpenTransmit(
@@ -625,7 +628,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3015
     #@param  motor_type  enum that specify the Motor type that is connected to SOLO in Digital Mode 
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motor_type(self, motor_type: MOTOR_TYPE) -> list[bool, ERROR]:
+    def set_motor_type(self, motor_type: MOTOR_TYPE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motor_type_input_validation(motor_type)
         if (InputValidate is False):
@@ -648,7 +651,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@param  control_mode  enum that specify the Control Mode in terms of Torque,
     #                      Speed or Position only in Digital Mode  
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_control_mode(self, control_mode: CONTROL_MODE) -> list[bool, ERROR]:
+    def set_control_mode(self, control_mode: CONTROL_MODE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_control_mode_input_validation(control_mode)
         if (InputValidate is False):
@@ -669,7 +672,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3017
     #@param  current_controller_kp  a float value between 0 to 16000   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_current_controller_kp(self, current_controller_kp: float) -> list[bool, ERROR]:
+    def set_current_controller_kp(self, current_controller_kp: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_current_controller_kp_input_validation(current_controller_kp)
         if (InputValidate is False):
@@ -687,7 +690,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3018
     #@param  current_controller_ki  a float value between 0 to 16000   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_current_controller_ki(self, current_controller_ki: float) -> list[bool, ERROR]:
+    def set_current_controller_ki(self, current_controller_ki: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_current_controller_ki_input_validation(current_controller_ki)
         if (InputValidate is False):
@@ -708,7 +711,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x301A
     #@param  magnetizing_current_id_reference  a float value [Amps]    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_magnetizing_current_id_reference(self, magnetizing_current_id_reference: float) -> list[bool, ERROR]:
+    def set_magnetizing_current_id_reference(self, magnetizing_current_id_reference: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_magnetizing_current_id_reference_input_validation(magnetizing_current_id_reference)
         if (InputValidate is False):
@@ -728,7 +731,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x301B
     #@param  position_reference  a long value [Quad-Pulse]   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_position_reference(self, position_reference: int) -> list[bool, ERROR]:
+    def set_position_reference(self, position_reference: int) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_position_reference_input_validation(position_reference)
         if (InputValidate is False):
@@ -745,7 +748,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x301C
     #@param  position_controller_kp  a float value between 0 to 16000   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_position_controller_kp(self, position_controller_kp: float) -> list[bool, ERROR]:
+    def set_position_controller_kp(self, position_controller_kp: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_position_controller_kp_input_validation(position_controller_kp)
         if (InputValidate is False):
@@ -763,7 +766,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x301D
     #@param  position_controller_ki  a float value between 0 to 16000     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_position_controller_ki(self, position_controller_ki: float) -> list[bool, ERROR]:
+    def set_position_controller_ki(self, position_controller_ki: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_position_controller_ki_input_validation(position_controller_ki)
         if (InputValidate is False):
@@ -780,7 +783,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command resets the position counter back to zero
     #          .The method refers to the Object Dictionary: 0x301F     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def reset_position_to_zero(self) -> list[bool, ERROR]:
+    def reset_position_to_zero(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         result, error = self.CANOpenTransmit(
@@ -792,7 +795,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        reported with command code of "0xA1"   
     #          .The method refers to the Object Dictionary: 0x3020
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def overwrite_error_register(self) -> list[bool, ERROR]:
+    def overwrite_error_register(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         result, error = self.CANOpenTransmit(
@@ -806,7 +809,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3021
     #@param  observer_gain  a float value between 0.01 to 1000    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_observer_gain_bldc_pmsm(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_bldc_pmsm(self, observer_gain: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_observer_gain_bldc_pmsm_input_validation(observer_gain)
         if (InputValidate is False):
@@ -825,7 +828,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3022
     #@param  observer_gain  a float value between 0.01 to 1000    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_observer_gain_bldc_pmsm_ultrafast(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_bldc_pmsm_ultrafast(self, observer_gain: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_observer_gain_bldc_pmsm_ultrafast_input_validation(observer_gain)
         if (InputValidate is False):
@@ -844,7 +847,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3023
     #@param  observer_gain  a float value between 0.01 to 1000    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_observer_gain_dc(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_dc(self, observer_gain: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_observer_gain_dc_input_validation(observer_gain)
         if (InputValidate is False):
@@ -862,7 +865,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3024
     #@param  filter_gain  a float value between 0.01 to 16000   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_filter_gain_bldc_pmsm(self, filter_gain: float) -> list[bool, ERROR]:
+    def set_filter_gain_bldc_pmsm(self, filter_gain: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_filter_gain_bldc_pmsm_input_validation(filter_gain)
         if (InputValidate is False):
@@ -880,7 +883,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3025
     #@param  filterGain  a float value between 0.01 to 16000   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_filter_gain_bldc_pmsm_ultrafast(self, filter_gain: float) -> list[bool, ERROR]:
+    def set_filter_gain_bldc_pmsm_ultrafast(self, filter_gain: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_filter_gain_bldc_pmsm_ultrafast_input_validation(filter_gain)
         if (InputValidate is False):
@@ -897,7 +900,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3026
     #@param  baudrate  enum that specify the baud-rate of the UART line     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_uart_baudrate(self, baudrate: UART_BAUD_RATE) -> list[bool, ERROR]:
+    def set_uart_baudrate(self, baudrate: UART_BAUD_RATE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_uart_baudrate_input_validation(baudrate)
         if (InputValidate is False):
@@ -918,7 +921,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3027
     #@param  calibration_action  enum that specify the process of sensor calibration   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def sensor_calibration(self, calibration_action: POSITION_SENSOR_CALIBRATION_ACTION) -> list[bool, ERROR]:
+    def sensor_calibration(self, calibration_action: POSITION_SENSOR_CALIBRATION_ACTION) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = sensor_calibration_input_validation(calibration_action)
         if (InputValidate is False):
@@ -941,7 +944,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3028
     #@param  encoder_hall_offset  a float value between 0.0 to 1.0   
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_encoder_hall_ccw_offset(self, encoder_hall_offset: float) -> list[bool, ERROR]:
+    def set_encoder_hall_ccw_offset(self, encoder_hall_offset: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_encoder_hall_ccw_offset_input_validation(encoder_hall_offset)
         if (InputValidate is False):
@@ -959,7 +962,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3029
     #@param  encoder_hall_offset  a float value between 0.0 to 1.0     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_encoder_hall_cw_offset(self, encoder_hall_offset: float) -> list[bool, ERROR]:
+    def set_encoder_hall_cw_offset(self, encoder_hall_offset: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_encoder_hall_cw_offset_input_validation(encoder_hall_offset)
         if (InputValidate is False):
@@ -977,7 +980,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x302A
     #@param  speed_acceleration_value  a float value [Rev/S^2]  
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_speed_acceleration_value(self, speed_acceleration_value: float) -> list[bool, ERROR]:
+    def set_speed_acceleration_value(self, speed_acceleration_value: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_acceleration_value_input_validation(speed_acceleration_value)
         if (InputValidate is False):
@@ -996,7 +999,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x302B
     #@param  speed_deceleration_value  a float value [Rev/S^2]     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_speed_deceleration_value(self, speed_deceleration_value: float) -> list[bool, ERROR]:
+    def set_speed_deceleration_value(self, speed_deceleration_value: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_speed_deceleration_value_input_validation(speed_deceleration_value)
         if (InputValidate is False):
@@ -1014,7 +1017,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x302C
     #@param  canbus_baudrate  enum that specify the baud rate of CAN bus in CANOpen network    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_can_bus_baudrate(self, canbus_baudrate: CAN_BUS_BAUD_RATE) -> list[bool, ERROR]:
+    def set_can_bus_baudrate(self, canbus_baudrate: CAN_BUS_BAUD_RATE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_can_bus_baudrate_input_validation(canbus_baudrate)
         if (InputValidate is False):
@@ -1036,7 +1039,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x303E
     #@param  division_coefficient  a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_analogue_speed_resolution_division_coefficient(self, division_coefficient: float) -> list[bool, ERROR]:
+    def set_analogue_speed_resolution_division_coefficient(self, division_coefficient: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_analogue_speed_resolution_division_coefficient_input_validation(division_coefficient)
         if (InputValidate is False):
@@ -1056,7 +1059,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3040
     #@param  motion_profile_mode enum that specify the type of the Motion Profile    
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_mode(self, motion_profile_mode: MOTION_PROFILE_MODE) -> list[bool, ERROR]:
+    def set_motion_profile_mode(self, motion_profile_mode: MOTION_PROFILE_MODE) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_mode_input_validation(motion_profile_mode)
         if (InputValidate is False):
@@ -1078,7 +1081,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3041
     #@param  motion_profile_variable1 a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_variable1(self, motion_profile_variable1: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable1(self, motion_profile_variable1: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_variable1_input_validation(motion_profile_variable1)
         if (InputValidate is False):
@@ -1097,7 +1100,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3042
     #@param  motion_profile_variable2 a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_variable2(self, motion_profile_variable2: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable2(self, motion_profile_variable2: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_variable2_input_validation(motion_profile_variable2)
         if (InputValidate is False):
@@ -1116,7 +1119,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          .The method refers to the Object Dictionary: 0x3043
     #@param  motion_profile_variable3 a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_variable3(self, motion_profile_variable3: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable3(self, motion_profile_variable3: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_variable3_input_validation(motion_profile_variable3)
         if (InputValidate is False):
@@ -1135,7 +1138,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3044
     #@param  motion_profile_variable4 a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_variable4(self, motion_profile_variable4: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable4(self, motion_profile_variable4: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_variable4_input_validation(motion_profile_variable4)
         if (InputValidate is False):
@@ -1154,7 +1157,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x3045
     #@param  motion_profile_variable5 a long value     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def set_motion_profile_variable5(self, motion_profile_variable5: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable5(self, motion_profile_variable5: float) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         InputValidate, error, logMsg = set_motion_profile_variable5_input_validation(motion_profile_variable5)
         if (InputValidate is False):
@@ -1171,7 +1174,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
 # ---------------------Read---------------------
 # ----------------------------------------------
 
-    def get_read_error_register(self) -> list[int, ERROR]:
+    def get_read_error_register(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1181,7 +1184,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
             return convert_from_data(informationReceived, DATA_TYPE.UINT32), error
         return -1, error
 
-    def get_guard_time(self) -> list[int, ERROR]:
+    def get_guard_time(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1191,7 +1194,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
             return convert_from_data(informationReceived, DATA_TYPE.UINT32), error
         return -1, error
 
-    def get_life_time_factor(self) -> list[int, ERROR]:
+    def get_life_time_factor(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1201,7 +1204,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
             return convert_from_data(informationReceived, DATA_TYPE.UINT32), error
         return -1, error
 
-    def get_producer_heartbeat_time(self) -> list[int, ERROR]:
+    def get_producer_heartbeat_time(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1215,7 +1218,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the device address connected on the line 
     #          .The method refers to the Object Dictionary: 0x3001   
     #@retval List of [long device address connected on the line, ERROR class/enumeration]
-    def get_device_address(self) -> list[int, ERROR]:
+    def get_device_address(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1230,7 +1233,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "A" pin output of SOLO for 3-phase Motors   
     #          .The method refers to the Object Dictionary: 0x302D
     #@retval List of [float phase-A voltage of the motor [Volts], ERROR class/enumeration]
-    def get_phase_a_voltage(self) -> list[float, ERROR]:
+    def get_phase_a_voltage(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1245,7 +1248,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "B" pin output of SOLO for 3-phase Motors  
     #          .The method refers to the Object Dictionary: 0x302E
     #@retval List of [float 0 phase-A voltage of the motor [Volts], ERROR class/enumeration]
-    def get_phase_b_voltage(self) -> list[float, ERROR]:
+    def get_phase_b_voltage(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1260,7 +1263,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "A" pin output of SOLO for 3-phase Motors 
     #          .The method refers to the Object Dictionary: 0x302F
     #@retval List of [float phase-A current of the motor [Amps], ERROR class/enumeration]
-    def get_phase_a_current(self) -> list[float, ERROR]:
+    def get_phase_a_current(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1275,7 +1278,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "B" pin output of SOLO for 3-phase Motors  
     #          .The method refers to the Object Dictionary: 0x3030
     #@retval List of [float phase-B current of the motor [Amps], ERROR class/enumeration]
-    def get_phase_b_current(self) -> list[float, ERROR]:
+    def get_phase_b_current(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1289,7 +1292,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the input BUS voltage   
     #          .The method refers to the Object Dictionary: 0x3031 
     #@retval List of [float  BUS voltage [Volts], ERROR class/enumeration]
-    def get_bus_voltage(self) -> list[float, ERROR]:
+    def get_bus_voltage(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1304,7 +1307,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "B" and "C" outputs of SOLO  
     #          .The method refers to the Object Dictionary: 0x3032
     #@retval List of [float between [Amps], ERROR class/enumeration]
-    def get_dc_motor_current_im(self) -> list[float, ERROR]:
+    def get_dc_motor_current_im(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1319,7 +1322,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        "B" and "C" outputs of SOLO  
     #          .The method refers to the Object Dictionary: 0x3033
     #@retval List of [float [Volts], ERROR class/enumeration]
-    def get_dc_motor_voltage_vm(self) -> list[float, ERROR]:
+    def get_dc_motor_voltage_vm(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1334,7 +1337,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        set for Digital mode operations   
     #          .The method refers to the Object Dictionary: 0x300A
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_speed_controller_kp(self) -> list[float, ERROR]:
+    def get_speed_controller_kp(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1349,7 +1352,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        set for Digital mode operations   
     #          .The method refers to the Object Dictionary: 0x300B
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_speed_controller_ki(self) -> list[float, ERROR]:
+    def get_speed_controller_ki(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1363,7 +1366,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the output switching frequency of SOLO in Hertz 
     #          .The method refers to the Object Dictionary: 0x3009
     #@retval List of [long [Hz], ERROR class/enumeration]
-    def get_output_pwm_frequency_khz(self) -> list[int, ERROR]:
+    def get_output_pwm_frequency_khz(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1378,7 +1381,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        closed-loop digital operation mode   
     #          .The method refers to the Object Dictionary: 0x3003
     #@retval List of [float [Amps], ERROR class/enumeration]
-    def get_current_limit(self) -> list[float, ERROR]:
+    def get_current_limit(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1393,7 +1396,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        the current acts in torque generation in FOC mode for 3-phase motors 
     #          .The method refers to the Object Dictionary: 0x3034 
     #@retval List of [float [Amps], ERROR class/enumeration]
-    def get_quadrature_current_iq_feedback(self) -> list[float, ERROR]:
+    def get_quadrature_current_iq_feedback(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1408,7 +1411,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        direct current acting in FOC  
     #          .The method refers to the Object Dictionary: 0x3035
     #@retval List of [float [Amps], ERROR class/enumeration]
-    def get_magnetizing_current_id_feedback(self) -> list[float, ERROR]:
+    def get_magnetizing_current_id_feedback(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1422,7 +1425,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the number of Poles set for 3-phase motors 
     #          .The method refers to the Object Dictionary: 0x300F 
     #@retval List of [long between 1 to 254, ERROR class/enumeration]
-    def get_motor_poles_counts(self) -> list[int, ERROR]:
+    def get_motor_poles_counts(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1436,7 +1439,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the number of physical Incremental encoder lines set on SOLO   
     #          .The method refers to the Object Dictionary: 0x3010
     #@retval List of [long between 1 to 200000, ERROR class/enumeration]
-    def get_incremental_encoder_lines(self) -> list[int, ERROR]:
+    def get_incremental_encoder_lines(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1451,7 +1454,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Kp or proportional gain  
     #          .The method refers to the Object Dictionary: 0x3017
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_current_controller_kp(self) -> list[float, ERROR]:
+    def get_current_controller_kp(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1466,7 +1469,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Ki or integrator gain    
     #          .The method refers to the Object Dictionary: 0x3018
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_current_controller_ki(self) -> list[float, ERROR]:
+    def get_current_controller_ki(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1480,7 +1483,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the momentary temperature of the board in centigrade  
     #          .The method refers to the Object Dictionary: 0x3039
     #@retval List of [float [°C], ERROR class/enumeration]
-    def get_board_temperature(self) -> list[float, ERROR]:
+    def get_board_temperature(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1495,7 +1498,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        the 3-phase or DC brushed motor connected to SOLO respectively  
     #          .The method refers to the Object Dictionary: 0x300D
     #@retval List of [float [Ohms], ERROR class/enumeration]
-    def get_motor_resistance(self) -> list[float, ERROR]:
+    def get_motor_resistance(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1510,7 +1513,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        the 3-phase or DC brushed motor connected to SOLO respectively 
     #          .The method refers to the Object Dictionary: 0x300E  
     #@retval List of [float [Henry], ERROR class/enumeration]
-    def get_motor_inductance(self) -> list[float, ERROR]:
+    def get_motor_inductance(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1525,7 +1528,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        sensorless or sensor-based modes respectively   
     #          .The method refers to the Object Dictionary: 0x3036
     #@retval List of [long [RPM], ERROR class/enumeration]
-    def get_speed_feedback(self) -> list[int, ERROR]:
+    def get_speed_feedback(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1539,7 +1542,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the Motor type selected for Digital or Analogue mode operations 
     #          .The method refers to the Object Dictionary: 0x3015  
     #@retval List of [long between 0 to 3, ERROR class/enumeration]
-    def get_motor_type(self) -> list[MOTOR_TYPE, ERROR]:
+    def get_motor_type(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1554,7 +1557,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        for Analogue and Digital operations    
     #          .The method refers to the Object Dictionary: 0x3013
     #@retval List of [long between 0 to 2, ERROR class/enumeration]
-    def get_feedback_control_mode(self) -> list[FEEDBACK_CONTROL_MODE, ERROR]:
+    def get_feedback_control_mode(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1568,7 +1571,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the actual commanding mode that SOLO is operating 
     #          .The method refers to the Object Dictionary: 0x3002
     #@retval List of [long between 0 or 1, ERROR class/enumeration]
-    def get_command_mode(self) -> list[COMMAND_MODE, ERROR]:
+    def get_command_mode(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1583,7 +1586,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Speed or Position in both Digital and Analogue modes  
     #          .The method refers to the Object Dictionary: 0x3013
     #@retval List of [long between 0 to 2, ERROR class/enumeration]
-    def get_control_mode(self) -> list[CONTROL_MODE, ERROR]:
+    def get_control_mode(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1597,7 +1600,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the speed limit set on SOLO  
     #          .The method refers to the Object Dictionary: 0x3011
     #@retval List of [long [RPM], ERROR class/enumeration]
-    def get_speed_limit(self) -> list[int, ERROR]:
+    def get_speed_limit(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1612,7 +1615,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        controller Kp or proportional gain   
     #          .The method refers to the Object Dictionary: 0x301C
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_position_controller_kp(self) -> list[float, ERROR]:
+    def get_position_controller_kp(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1627,7 +1630,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        controller Ki or integrator gain   
     #          .The method refers to the Object Dictionary: 0x301D
     #@retval List of [float between 0 to 16000, ERROR class/enumeration]
-    def get_position_controller_ki(self) -> list[float, ERROR]:
+    def get_position_controller_ki(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1642,7 +1645,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Incremental Encoder or Hall sensors  
     #          .The method refers to the Object Dictionary: 0x3037
     #@retval List of [long [Quad-Pulses], ERROR class/enumeration]
-    def get_position_counts_feedback(self) -> list[int, ERROR]:
+    def get_position_counts_feedback(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1657,7 +1660,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        each bit corresponding to specific errors   
     #          .The method refers to the Object Dictionary: 0x3020
     #@retval List of [long , ERROR class/enumeration]
-    def get_error_register(self) -> list[int, ERROR]:
+    def get_error_register(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1671,7 +1674,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the Firmware version existing currently on the SOLO unit   
     #          .The method refers to the Object Dictionary: 0x303A
     #@retval List of [long, ERROR class/enumeration]
-    def get_device_firmware_version(self) -> list[int, ERROR]:
+    def get_device_firmware_version(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1685,7 +1688,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the Hardware version of the SOLO unit connected    
     #          .The method refers to the Object Dictionary: 0x303B 
     #@retval List of [long, ERROR class/enumeration]
-    def get_device_hardware_version(self) -> list[int, ERROR]:
+    def get_device_hardware_version(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1700,7 +1703,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        already set for the Motor to follow in Digital Closed-loop Torque control mode  
     #          .The method refers to the Object Dictionary: 0x3004 
     #@retval List of [float [Amps], ERROR class/enumeration]
-    def get_torque_reference_iq(self) -> list[float, ERROR]:
+    def get_torque_reference_iq(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1715,7 +1718,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        the Motor to follow in Digital Closed-loop Speed control mode   
     #          .The method refers to the Object Dictionary: 0x3005
     #@retval List of [long [RPM], ERROR class/enumeration]
-    def get_speed_reference(self) -> list[int, ERROR]:
+    def get_speed_reference(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1731,7 +1734,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        in Digital Closed-loop Speed control mode for ACIM motors  
     #          .The method refers to the Object Dictionary: 0x301A
     #@retval List of [float [Amps], ERROR class/enumeration]
-    def get_magnetizing_current_id_reference(self) -> list[float, ERROR]:
+    def get_magnetizing_current_id_reference(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1746,7 +1749,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        to follow in Digital Closed-loop Position mode in terms of quadrature pulses 
     #          .The method refers to the Object Dictionary: 0x301B 
     #@retval List of [long [Quad-Pulses], ERROR class/enumeration]
-    def get_position_reference(self) -> list[int, ERROR]:
+    def get_position_reference(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1761,7 +1764,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Digital Open-loop speed control mode for 3-phase motors in terms of percentage
     #          .The method refers to the Object Dictionary: 0x3006
     #@retval List of [float [%], ERROR class/enumeration]
-    def get_power_reference(self) -> list[float, ERROR]:
+    def get_power_reference(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1775,7 +1778,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This commands reads the desired direction of rotation set for the Motor   
     #          .The method refers to the Object Dictionary: 0x300C
     #@retval List of [long 0 Counter ClockWise / 1 ClockWise, ERROR class/enumeration]
-    def get_motor_direction(self) -> list[DIRECTION, ERROR]:
+    def get_motor_direction(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1789,7 +1792,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of Sensorless Observer Gain for Normal BLDC-PMSM Motors  
     #          .The method refers to the Object Dictionary: 0x3021
     #@retval List of [float between 0.01 to 1000, ERROR class/enumeration]
-    def get_observer_gain_bldc_pmsm(self) -> list[float, ERROR]:
+    def get_observer_gain_bldc_pmsm(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1803,7 +1806,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of Sensorless Observer Gain for Normal BLDC-PMSM Motors  
     #          .The method refers to the Object Dictionary: 0x3022
     #@retval List of [float between 0.01 to 1000, ERROR class/enumeration]
-    def get_observer_gain_bldc_pmsm_ultrafast(self) -> list[float, ERROR]:
+    def get_observer_gain_bldc_pmsm_ultrafast(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1817,7 +1820,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of Sensorless Observer Gain for DC Motor  
     #          .The method refers to the Object Dictionary: 0x3023
     #@retval List of [float between 0.01 to 1000, ERROR class/enumeration]
-    def get_observer_gain_dc(self) -> list[float, ERROR]:
+    def get_observer_gain_dc(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1832,7 +1835,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Filter Gain for Normal BLDC-PMSM Motors    
     #          .The method refers to the Object Dictionary: 0x3024
     #@retval List of [float between 0.01 to 16000, ERROR class/enumeration]
-    def get_filter_gain_bldc_pmsm(self) -> list[float, ERROR]:
+    def get_filter_gain_bldc_pmsm(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1847,7 +1850,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        Filter Gain for Ultra Fast BLDC-PMSM Motors  
     #          .The method refers to the Object Dictionary: 0x3025
     #@retval List of [float between 0.01 to 16000, ERROR class/enumeration]
-    def get_filter_gain_bldc_pmsm_ultrafast(self) -> list[float, ERROR]:
+    def get_filter_gain_bldc_pmsm_ultrafast(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1861,7 +1864,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the measured or estimated per-unit angle of the 3-phase motors   
     #          .The method refers to the Object Dictionary: 0x3038
     #@retval List of [float [Per Unit], ERROR class/enumeration]
-    def get_3phase_motor_angle(self) -> list[float, ERROR]:
+    def get_3phase_motor_angle(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1875,7 +1878,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the per-unit Encoder or Hall sensor offset in C.C.W direction    
     #          .The method refers to the Object Dictionary: 0x3028
     #@retval List of [float [Per Unit], ERROR class/enumeration]
-    def get_encoder_hall_ccw_offset(self) -> list[float, ERROR]:
+    def get_encoder_hall_ccw_offset(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1889,7 +1892,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the per-unit Encoder or Hall sensor offset in C.C.W direction 
     #          .The method refers to the Object Dictionary: 0x3029  
     #@retval List of [float [Per Unit], ERROR class/enumeration]
-    def get_encoder_hall_cw_offset(self) -> list[float, ERROR]:
+    def get_encoder_hall_cw_offset(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1903,7 +1906,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads Baud Rate selected on SOLO unit to communicate through UART line   
     #          .The method refers to the Object Dictionary: 0x3026
     #@retval List of [long [Bits/s], ERROR class/enumeration]
-    def get_uart_baudrate(self) -> list[UART_BAUD_RATE, ERROR]:
+    def get_uart_baudrate(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1919,7 +1922,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        in Revolution per square seconds  
     #          .The method refers to the Object Dictionary: 0x302A
     #@retval List of [float [Rev/S^2], ERROR class/enumeration]
-    def get_speed_acceleration_value(self) -> list[float, ERROR]:
+    def get_speed_acceleration_value(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1935,7 +1938,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        in Revolution per square seconds  
     #          .The method refers to the Object Dictionary: 0x302B
     #@retval List of [float [Rev/S^2], ERROR class/enumeration]
-    def get_speed_deceleration_value(self) -> list[float, ERROR]:
+    def get_speed_deceleration_value(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1950,7 +1953,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #           .The method refers to the Object Dictionary: 0x303E
     #          while SOLO operates in Analogue mode     
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
-    def get_analogue_speed_resolution_division_coefficient(self) -> list[float, ERROR]:
+    def get_analogue_speed_resolution_division_coefficient(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1963,7 +1966,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     ##
     #@brief  This command test if the communication is working 
     #@retval  List of [ bool 0 not working / 1 for working, ERROR class/enumeration]
-    def communication_is_working(self) -> list[bool, ERROR]:
+    def communication_is_working(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         temperature, error = self.get_board_temperature()
         time.sleep(0.2)
@@ -1977,7 +1980,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #        seen on the Incremental Encoder’s output  
     #          .The method refers to the Object Dictionary: 0x303D 
     #@retval List of [long [Pulses], ERROR class/enumeration]
-    def get_encoder_index_counts(self) -> list[int, ERROR]:
+    def get_encoder_index_counts(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -1992,7 +1995,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #          being used in Speed or Position Modes    
     #           .The method refers to the Object Dictionary: 0x303F
     #@retval List of [Motion profile , ERROR class/enumeration]
-    def get_motion_profile_mode(self) -> list[MOTION_PROFILE_MODE, ERROR]:
+    def get_motion_profile_mode(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -2006,7 +2009,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the Motion Profile Variable1 set inside the controller  
     #           .The method refers to the Object Dictionary: 0x3040
     #@retval List of [Motion Profile Variable1, ERROR class/enumeration]
-    def get_motion_profile_variable1(self) -> list[float, ERROR]:
+    def get_motion_profile_variable1(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -2020,7 +2023,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the Motion Profile Variable2 set inside the controller 
     #           .The method refers to the Object Dictionary: 0x3041
     #@retval List of [Motion Profile Variable2, ERROR class/enumeration]
-    def get_motion_profile_variable2(self) -> list[float, ERROR]:
+    def get_motion_profile_variable2(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -2034,7 +2037,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the Motion Profile Variable3 set inside the controller
     #           .The method refers to the Object Dictionary: 0x3042
     #@retval List of [Motion Profile Variable3, ERROR class/enumeration]
-    def get_motion_profile_variable3(self) -> list[float, ERROR]:
+    def get_motion_profile_variable3(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -2048,7 +2051,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the Motion Profile Variable4 set inside the controller 
     #           .The method refers to the Object Dictionary: 0x3043
     #@retval List of [Motion Profile Variable4, ERROR class/enumeration]
-    def get_motion_profile_variable4(self) -> list[float, ERROR]:
+    def get_motion_profile_variable4(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND
@@ -2062,7 +2065,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@brief  This command reads the value of the Motion Profile Variable5 set inside the controller 
     #           .The method refers to the Object Dictionary: 0x3044
     #@retval List of [Motion Profile Variable5, ERROR class/enumeration]
-    def get_motion_profile_variable5(self) -> list[float, ERROR]:
+    def get_motion_profile_variable5(self) -> list:
         informationToSend = [0x00, 0x00, 0x00, 0x00]
         informationReceived = []
         error = ERROR.NO_PROCESSED_COMMAND

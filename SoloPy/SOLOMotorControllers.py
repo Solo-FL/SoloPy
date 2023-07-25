@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions prototypes for the Solo Drivers 
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2023
-#  @version 3.1.0
+#  @version 3.1.1
 
 ## @attention
 # Copyright: (c) 2021-2023 SOLO motor controllers project
@@ -165,314 +165,314 @@ class MOTION_PROFILE_MODE(Enum):
 
 class SOLOMotorControllers(Interface):
 
-    def set_device_address(self, device_address: int) -> list[bool, ERROR]:
+    def set_device_address(self, device_address: int) -> list:
         pass
 
-    def set_command_mode(self, mode: COMMAND_MODE) -> list[bool, ERROR]:
+    def set_command_mode(self, mode: COMMAND_MODE) -> list:
         pass
 
-    def set_current_limit(self, current_limit: float) -> list[bool, ERROR]:
+    def set_current_limit(self, current_limit: float) -> list:
         pass
 
-    def set_torque_reference_iq(self, torque_reference_iq: float) -> list[bool, ERROR]:
+    def set_torque_reference_iq(self, torque_reference_iq: float) -> list:
         pass
 
-    def set_speed_reference(self, speed_reference: int) -> list[bool, ERROR]:
+    def set_speed_reference(self, speed_reference: int) -> list:
         pass
 
-    def set_power_reference(self, power_reference: float) -> list[bool, ERROR]:
+    def set_power_reference(self, power_reference: float) -> list:
         pass
 
-    def motor_parameters_identification(self, identification: ACTION) -> list[bool, ERROR]:
+    def motor_parameters_identification(self, identification: ACTION) -> list:
         pass
 
-    def emergency_stop(self) -> list[bool, ERROR]:
+    def emergency_stop(self) -> list:
         pass
 
-    def set_output_pwm_frequency_khz(self, output_pwm_frequency_khz: int) -> list[bool, ERROR]:
+    def set_output_pwm_frequency_khz(self, output_pwm_frequency_khz: int) -> list:
         pass
 
-    def set_speed_controller_kp(self, speed_controller_kp: float) -> list[bool, ERROR]:
+    def set_speed_controller_kp(self, speed_controller_kp: float) -> list:
         pass
 
-    def set_speed_controller_ki(self, speed_controller_ki: float) -> list[bool, ERROR]:
+    def set_speed_controller_ki(self, speed_controller_ki: float) -> list:
         pass
 
-    def set_motor_direction(self, motor_direction: DIRECTION) -> list[bool, ERROR]:
+    def set_motor_direction(self, motor_direction: DIRECTION) -> list:
         pass
 
-    def set_motor_resistance(self, motor_resistance: float) -> list[bool, ERROR]:
+    def set_motor_resistance(self, motor_resistance: float) -> list:
         pass
 
-    def set_motor_inductance(self, motor_inductance: float) -> list[bool, ERROR]:
+    def set_motor_inductance(self, motor_inductance: float) -> list:
         pass
 
-    def set_motor_poles_counts(self, motor_poles_counts: int) -> list[bool, ERROR]:
+    def set_motor_poles_counts(self, motor_poles_counts: int) -> list:
         pass
 
-    def set_incremental_encoder_lines(self, incremental_encoder_lines: int) -> list[bool, ERROR]:
+    def set_incremental_encoder_lines(self, incremental_encoder_lines: int) -> list:
         pass
 
-    def set_speed_limit(self, speed_limit: int) -> list[bool, ERROR]:
+    def set_speed_limit(self, speed_limit: int) -> list:
         pass
 
-    def set_feedback_control_mode(self, mode: FEEDBACK_CONTROL_MODE) -> list[bool, ERROR]:
+    def set_feedback_control_mode(self, mode: FEEDBACK_CONTROL_MODE) -> list:
         pass
 
-    def reset_factory(self) -> list[bool, ERROR]:
+    def reset_factory(self) -> list:
         pass
 
-    def set_motor_type(self, motor_type: MOTOR_TYPE) -> list[bool, ERROR]:
+    def set_motor_type(self, motor_type: MOTOR_TYPE) -> list:
         pass
 
-    def set_control_mode(self, control_mode: CONTROL_MODE) -> list[bool, ERROR]:
+    def set_control_mode(self, control_mode: CONTROL_MODE) -> list:
         pass
 
-    def set_current_controller_kp(self, current_controller_kp: float) -> list[bool, ERROR]:
+    def set_current_controller_kp(self, current_controller_kp: float) -> list:
         pass
 
-    def set_current_controller_ki(self, current_controller_ki: float) -> list[bool, ERROR]:
+    def set_current_controller_ki(self, current_controller_ki: float) -> list:
         pass
 
-    def set_magnetizing_current_id_reference(self, magnetizing_current_id_reference: float) -> list[bool, ERROR]:
+    def set_magnetizing_current_id_reference(self, magnetizing_current_id_reference: float) -> list:
         pass
 
-    def set_position_reference(self, position_reference: int) -> list[bool, ERROR]:
+    def set_position_reference(self, position_reference: int) -> list:
         pass
 
-    def set_position_controller_kp(self, position_controller_kp: float) -> list[bool, ERROR]:
+    def set_position_controller_kp(self, position_controller_kp: float) -> list:
         pass
 
-    def set_position_controller_ki(self, position_controller_ki: float) -> list[bool, ERROR]:
+    def set_position_controller_ki(self, position_controller_ki: float) -> list:
         pass
 
-    def overwrite_error_register(self) -> list[bool, ERROR]:
+    def overwrite_error_register(self) -> list:
         pass
 
-    def set_observer_gain_bldc_pmsm(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_bldc_pmsm(self, observer_gain: float) -> list:
         pass
 
-    def set_observer_gain_bldc_pmsm_ultrafast(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_bldc_pmsm_ultrafast(self, observer_gain: float) -> list:
         pass
 
-    def set_observer_gain_dc(self, observer_gain: float) -> list[bool, ERROR]:
+    def set_observer_gain_dc(self, observer_gain: float) -> list:
         pass
 
-    def set_filter_gain_bldc_pmsm(self, filter_gain: float) -> list[bool, ERROR]:
+    def set_filter_gain_bldc_pmsm(self, filter_gain: float) -> list:
         pass
 
-    def set_filter_gain_bldc_pmsm_ultrafast(self, filter_gain: float) -> list[bool, ERROR]:
+    def set_filter_gain_bldc_pmsm_ultrafast(self, filter_gain: float) -> list:
         pass
 
-    def set_uart_baudrate(self, baudrate: UART_BAUD_RATE) -> list[bool, ERROR]:
+    def set_uart_baudrate(self, baudrate: UART_BAUD_RATE) -> list:
         pass
 
-    def sensor_calibration(self, calibration_action: POSITION_SENSOR_CALIBRATION_ACTION) -> list[bool, ERROR]:
+    def sensor_calibration(self, calibration_action: POSITION_SENSOR_CALIBRATION_ACTION) -> list:
         pass
 
-    def set_encoder_hall_ccw_offset(self, encoder_hall_offset: float) -> list[bool, ERROR]:
+    def set_encoder_hall_ccw_offset(self, encoder_hall_offset: float) -> list:
         pass
 
-    def set_encoder_hall_cw_offset(self, encoder_hall_offset: float) -> list[bool, ERROR]:
+    def set_encoder_hall_cw_offset(self, encoder_hall_offset: float) -> list:
         pass
 
-    def set_speed_acceleration_value(self, speed_acceleration_value: float) -> list[bool, ERROR]:
+    def set_speed_acceleration_value(self, speed_acceleration_value: float) -> list:
         pass
 
-    def set_speed_deceleration_value(self, speed_deceleration_value: float) -> list[bool, ERROR]:
+    def set_speed_deceleration_value(self, speed_deceleration_value: float) -> list:
         pass
 
-    def set_can_bus_baudrate(self, canbus_baudrate: CAN_BUS_BAUD_RATE) -> list[bool, ERROR]:
+    def set_can_bus_baudrate(self, canbus_baudrate: CAN_BUS_BAUD_RATE) -> list:
         pass
         
-    def set_analogue_speed_resolution_division_coefficient(self, division_coefficient: float) -> list[bool, ERROR]:
+    def set_analogue_speed_resolution_division_coefficient(self, division_coefficient: float) -> list:
         pass
-    def set_motion_profile_mode(self, motion_profile_mode: MOTION_PROFILE_MODE) -> list[bool, ERROR]:
+    def set_motion_profile_mode(self, motion_profile_mode: MOTION_PROFILE_MODE) -> list:
         pass
-    def set_motion_profile_variable1(self, motion_profile_variable1: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable1(self, motion_profile_variable1: float) -> list:
         pass
-    def set_motion_profile_variable2(self, motion_profile_variable2: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable2(self, motion_profile_variable2: float) -> list:
         pass
-    def set_motion_profile_variable3(self, motion_profile_variable3: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable3(self, motion_profile_variable3: float) -> list:
         pass
-    def set_motion_profile_variable4(self, motion_profile_variable4: float) -> list[bool, ERROR]:
+    def set_motion_profile_variable4(self, motion_profile_variable4: float) -> list:
         pass
-    def set_motion_profile_variable5(self, motion_profile_variable5: float) -> list[bool, ERROR]: 
+    def set_motion_profile_variable5(self, motion_profile_variable5: float) -> list: 
         pass
                                                                                
-    def get_device_address(self) -> list[int, ERROR]:                                       
+    def get_device_address(self) -> list:                                       
         pass                                                                   
                                                                                
-    def get_phase_a_voltage(self) -> list[float, ERROR]:
+    def get_phase_a_voltage(self) -> list:
         pass
 
-    def get_phase_b_voltage(self) -> list[float, ERROR]:
+    def get_phase_b_voltage(self) -> list:
         pass
 
-    def get_phase_a_current(self) -> list[float, ERROR]:
+    def get_phase_a_current(self) -> list:
         pass
 
-    def get_phase_b_current(self) -> list[float, ERROR]:
+    def get_phase_b_current(self) -> list:
         pass
 
-    def get_bus_voltage(self) -> list[float, ERROR]:
+    def get_bus_voltage(self) -> list:
         pass
 
-    def get_dc_motor_current_im(self) -> list[float, ERROR]:
+    def get_dc_motor_current_im(self) -> list:
         pass
 
-    def get_dc_motor_voltage_vm(self) -> list[float, ERROR]:
+    def get_dc_motor_voltage_vm(self) -> list:
         pass
 
-    def get_speed_controller_kp(self) -> list[float, ERROR]:
+    def get_speed_controller_kp(self) -> list:
         pass
 
-    def get_speed_controller_ki(self) -> list[float, ERROR]:
+    def get_speed_controller_ki(self) -> list:
         pass
 
-    def get_output_pwm_frequency_khz(self) -> list[int, ERROR]:
+    def get_output_pwm_frequency_khz(self) -> list:
         pass
 
-    def get_current_limit(self) -> list[float, ERROR]:
+    def get_current_limit(self) -> list:
         pass
 
-    def get_quadrature_current_iq_feedback(self) -> list[float, ERROR]:
+    def get_quadrature_current_iq_feedback(self) -> list:
         pass
 
-    def get_magnetizing_current_id_feedback(self) -> list[float, ERROR]:
+    def get_magnetizing_current_id_feedback(self) -> list:
         pass
 
-    def get_motor_poles_counts(self) -> list[int, ERROR]:
+    def get_motor_poles_counts(self) -> list:
         pass
 
-    def get_incremental_encoder_lines(self) -> list[int, ERROR]:
+    def get_incremental_encoder_lines(self) -> list:
         pass
 
-    def get_current_controller_kp(self) -> list[float, ERROR]:
+    def get_current_controller_kp(self) -> list:
         pass
 
-    def get_current_controller_ki(self) -> list[float, ERROR]:
+    def get_current_controller_ki(self) -> list:
         pass
 
-    def get_board_temperature(self) -> list[float, ERROR]:
+    def get_board_temperature(self) -> list:
         pass
 
-    def get_motor_resistance(self) -> list[float, ERROR]:
+    def get_motor_resistance(self) -> list:
         pass
 
-    def get_motor_inductance(self) -> list[float, ERROR]:
+    def get_motor_inductance(self) -> list:
         pass
 
-    def get_speed_feedback(self) -> list[int, ERROR]:
+    def get_speed_feedback(self) -> list:
         pass
 
-    def get_motor_type(self) -> list[MOTOR_TYPE, ERROR]:
+    def get_motor_type(self) -> list:
         pass
 
-    def get_feedback_control_mode(self) -> list[FEEDBACK_CONTROL_MODE, ERROR]:
+    def get_feedback_control_mode(self) -> list:
         pass
 
-    def get_command_mode(self) -> list[COMMAND_MODE, ERROR]:
+    def get_command_mode(self) -> list:
         pass
 
-    def get_control_mode(self) -> list[CONTROL_MODE, ERROR]:
+    def get_control_mode(self) -> list:
         pass
 
-    def get_speed_limit(self) -> list[int, ERROR]:
+    def get_speed_limit(self) -> list:
         pass
 
-    def get_position_controller_kp(self) -> list[float, ERROR]:
+    def get_position_controller_kp(self) -> list:
         pass
 
-    def get_position_controller_ki(self) -> list[float, ERROR]:
+    def get_position_controller_ki(self) -> list:
         pass
 
-    def get_position_counts_feedback(self) -> list[int, ERROR]:
+    def get_position_counts_feedback(self) -> list:
         pass
 
-    def get_error_register(self) -> list[int, ERROR]:
+    def get_error_register(self) -> list:
         pass
 
-    def get_device_firmware_version(self) -> list[int, ERROR]:
+    def get_device_firmware_version(self) -> list:
         pass
 
-    def get_device_hardware_version(self) -> list[int, ERROR]:
+    def get_device_hardware_version(self) -> list:
         pass
 
-    def get_torque_reference_iq(self) -> list[float, ERROR]:
+    def get_torque_reference_iq(self) -> list:
         pass
 
-    def get_speed_reference(self) -> list[int, ERROR]:
+    def get_speed_reference(self) -> list:
         pass
 
-    def get_magnetizing_current_id_reference(self) -> list[float, ERROR]:
+    def get_magnetizing_current_id_reference(self) -> list:
         pass
 
-    def get_position_reference(self) -> list[int, ERROR]:
+    def get_position_reference(self) -> list:
         pass
 
-    def get_power_reference(self) -> list[float, ERROR]:
+    def get_power_reference(self) -> list:
         pass
 
-    def get_motor_direction(self) -> list[UART_BAUD_RATE, ERROR]:
+    def get_motor_direction(self) -> list:
         pass
 
-    def get_observer_gain_bldc_pmsm(self) -> list[float, ERROR]:
+    def get_observer_gain_bldc_pmsm(self) -> list:
         pass
 
-    def get_observer_gain_bldc_pmsm_ultrafast(self) -> list[float, ERROR]:
+    def get_observer_gain_bldc_pmsm_ultrafast(self) -> list:
         pass
 
-    def get_observer_gain_dc(self) -> list[float, ERROR]:
+    def get_observer_gain_dc(self) -> list:
         pass
 
-    def get_filter_gain_bldc_pmsm(self) -> list[float, ERROR]:
+    def get_filter_gain_bldc_pmsm(self) -> list:
         pass
 
-    def get_filter_gain_bldc_pmsm_ultrafast(self) -> list[float, ERROR]:
+    def get_filter_gain_bldc_pmsm_ultrafast(self) -> list:
         pass
 
-    def get_3phase_motor_angle(self) -> list[float, ERROR]:
+    def get_3phase_motor_angle(self) -> list:
         pass
 
-    def get_encoder_hall_ccw_offset(self) -> list[float, ERROR]:
+    def get_encoder_hall_ccw_offset(self) -> list:
         pass
 
-    def get_encoder_hall_cw_offset(self) -> list[float, ERROR]:
+    def get_encoder_hall_cw_offset(self) -> list:
         pass
 
-    def get_uart_baudrate(self) -> list[UART_BAUD_RATE, ERROR]:
+    def get_uart_baudrate(self) -> list:
         pass
         
-    def get_analogue_speed_resolution_division_coefficient(self) -> list[float, ERROR]:
+    def get_analogue_speed_resolution_division_coefficient(self) -> list:
         pass
                                                                                                                                    
-    def get_speed_acceleration_value(self) -> list[float, ERROR]:
+    def get_speed_acceleration_value(self) -> list:
         pass
 
-    def get_speed_deceleration_value(self) -> list[float, ERROR]:
+    def get_speed_deceleration_value(self) -> list:
         pass
 
-    def communication_is_working(self) -> list[bool, ERROR]:
+    def communication_is_working(self) -> list:
         pass
 
-    def get_encoder_index_counts(self) -> list[int, ERROR]:
+    def get_encoder_index_counts(self) -> list:
         pass
     
-    def get_motion_profile_mode(self) -> list[MOTION_PROFILE_MODE, ERROR]:
+    def get_motion_profile_mode(self) -> list:
         pass
         
-    def get_motion_profile_variable1(self) -> list[float, ERROR]:
+    def get_motion_profile_variable1(self) -> list:
         pass
         
-    def get_motion_profile_variable2(self) -> list[float, ERROR]:
+    def get_motion_profile_variable2(self) -> list:
         pass
 
-    def get_motion_profile_variable3(self) -> list[float, ERROR]:
+    def get_motion_profile_variable3(self) -> list:
         pass
 
-    def get_motion_profile_variable4(self) -> list[float, ERROR]:
+    def get_motion_profile_variable4(self) -> list:
         pass
 
-    def get_motion_profile_variable5(self) -> list[float, ERROR]:
+    def get_motion_profile_variable5(self) -> list:
         pass

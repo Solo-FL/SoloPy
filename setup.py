@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'SoloPy',        
   packages = ['SoloPy'],  
-  version = 'v3.1.1',      
+  version = 'v3.1.2',      
   license='gpl-3.0',      
   description = 'PYTHON Library for Control Solo Motor',   
   author = 'Solo',                  

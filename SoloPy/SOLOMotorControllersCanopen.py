@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions for the Solo Canopen Drivers 
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2023
-#  @version 3.1.2
+#  @version 3.1.3
 
 ## @attention
 # Copyright: (c) 2021-2023 SOLO motor controllers project
@@ -1652,7 +1652,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
         result, error, informationReceived = self.CANOpenReceive(
             self._address, ConstantCanopen.Object_PositionCountsFeedback, informationToSend)
         if (error == ERROR.NO_ERROR_DETECTED) and (result is True):
-            return convert_from_data(informationReceived, DATA_TYPE.UINT32), error
+            return convert_from_data(informationReceived, DATA_TYPE.INT32), error
         return -1, error
 
     ##
@@ -1756,7 +1756,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
         result, error, informationReceived = self.CANOpenReceive(
             self._address, ConstantCanopen.Object_PositionReference, informationToSend)
         if (error == ERROR.NO_ERROR_DETECTED) and (result is True):
-            return convert_from_data(informationReceived, DATA_TYPE.UINT32), error
+            return convert_from_data(informationReceived, DATA_TYPE.INT32), error
         return -1, error
 
     ##

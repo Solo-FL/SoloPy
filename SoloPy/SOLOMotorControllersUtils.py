@@ -4,7 +4,7 @@
 # Title: SoloPy
 # Author: SOLOMotorControllers
 # Date: 2023
-# Code version: 3.1.1
+# Code version: 3.1.3
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -16,18 +16,35 @@ import SoloPy.ConstantCommon as ConstantCommon
 def convert_to_data(number, dataType: DATA_TYPE) -> list:
     data = []
     if (dataType == DATA_TYPE.SFXT):
-        dec = math.ceil(number * 131072)
-        if dec < 0:
-            dec *= -1
-            dec = 0xFFFFFFFF - dec
-        data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
+        data = SFXT_to_data(number)
 
-    if (dataType == DATA_TYPE.UINT32 or dataType == DATA_TYPE.INT32):
-        dec = number
-        data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
+    if ( dataType == DATA_TYPE.INT32):
+        data = INT32_to_data(number)
+        
+    if (dataType == DATA_TYPE.UINT32):
+        data = UINT32_to_data(number)
 
     return data
 
+def SFXT_to_data(number) -> list:
+    data = []
+    dec = math.ceil(number * 131072)
+    if dec < 0:
+        dec *= -1
+        dec = 0xFFFFFFFF - dec
+    data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
+    return data
+
+def UINT32_to_data(number) -> list:
+    dec = number
+    data = [(dec >> i & 0xff) for i in (24, 16, 8, 0)]
+    return data
+
+def INT32_to_data(number) -> list:
+    i32Value = number * 1;
+    if (i32Value < 0):
+        i32Value = 4294967295 - abs(i32Value) + 1;
+    return UINT32_to_data(i32Value)
 
 def convert_from_data(data, dataType: DATA_TYPE):
     if (dataType == DATA_TYPE.SFXT):
@@ -39,7 +56,6 @@ def convert_from_data(data, dataType: DATA_TYPE):
     if (dataType == DATA_TYPE.UINT32):
         return convert_to_long(data)
 
-
 def convert_to_float(data) -> float:
     dec = 0
     dec = int.from_bytes(
@@ -50,8 +66,7 @@ def convert_to_float(data) -> float:
     else:
         dec = 0xFFFFFFFF - dec + 1
         value = ((float)(dec / 131072.0)) * -1
-        return float(format(value, 'f'))  # .8f
-
+        return float(format(value, '.8f'))  # .8f
 
 def convert_to_long(data) -> int:
     dec = 0
@@ -59,13 +74,11 @@ def convert_to_long(data) -> int:
         [data[0], data[1], data[2], data[3]], byteorder='big', signed=False)
     return dec
 
-
 def convert_to_int(data) -> int:
-    dec = 0
-    dec = int.from_bytes(
-        [data[0], data[1], data[2], data[3]], byteorder='big', signed=True)
+    dec = convert_to_long(data)
+    if (dec > 2147483647):
+        dec = (4294967295 - dec + 1)*-1
     return dec
-
 
 def ExtractData(Data: list) -> list:
     ExtractedData = [0, 0, 0, 0]
@@ -76,12 +89,10 @@ def ExtractData(Data: list) -> list:
         ExtractedData[3] = Data[4]
     return ExtractedData
 
-
 def get_data(cmd: list) -> list:
     return [cmd[2], cmd[3], cmd[4], cmd[5]]
 
 # -- input Validation
-
 
 def set_guard_time_input_validation(guardtime: int) -> list:
     if (guardtime < 0 or guardtime > 65535):

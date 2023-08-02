@@ -82,3 +82,15 @@ def general_setget_test(functionSet, functionGet, valueToSet):
 #     assert isSet == True
 #     getValue, error = solo.get_current_limit()
 #     assert setValue == getValue
+
+
+# snippet for conversion test
+# data=b'\xff\xff\xf2\x54'
+
+# print(convert_to_int(data))
+# print(convert_to_long(data))
+# print(convert_to_float(data))
+
+# print(convert_to_data(convert_to_int(data), DATA_TYPE.INT32))
+# print(convert_to_data(convert_to_long(data), DATA_TYPE.UINT32))
+# print(convert_to_data(convert_to_float(data), DATA_TYPE.SFXT))

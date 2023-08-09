@@ -30,3 +30,6 @@ while True:
     print("Error: " + str(error))
 
     time.sleep(1)
+
+#ensure close the serial
+mySolo.disconnect() 

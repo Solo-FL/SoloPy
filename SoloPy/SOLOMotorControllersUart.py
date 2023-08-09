@@ -51,15 +51,15 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
         self._port = port
         self._timeout = timeout
         self._ser = None
-        self.serial_open()
+        self.connect()
         # TODO try solving serial error
 
     def __del__(self):
         self._logger.debug('SoloMotorController DEL')
-        self.serial_close()
+        self.disconnect()
 
     def __exec_cmd(self, cmd: list) -> list:
-        self.serial_open()
+        self.connect()
 
         _cmd = [ConstantUart.INITIATOR, ConstantUart.INITIATOR,
                 cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], ConstantUart.CRC, ConstantUart.ENDING]
@@ -119,13 +119,13 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
         cmd[3] = 0xEE
         cmd[4] = 0xEE
         cmd[5] = 0xEE
-        self.serial_close()
+        self.disconnect()
         return False, ERROR.GENERAL_ERROR
 
     # #############################Support##############################
-    def serial_open(self) -> bool:
+    def connect(self) -> bool:
         if(self._ser is None):
-            self._logger.debug("serial_open start")
+            self._logger.debug("connect start")
             try:
                 self._ser = serial.Serial(
                     self._port, self._baudrate, timeout=self._timeout, writeTimeout=self._timeout)
@@ -147,7 +147,7 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
 
             except Exception as e:
                 self._logger.error(
-                    "serial_open: Exception during the serial inizialisation")
+                    "connect: Exception during the serial inizialisation")
                 # self._logger.error( e, exc_info=True)
                 # raise e
                 return False
@@ -162,7 +162,7 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
             self._ser.reset_output_buffer()
             time.sleep(self._timeout*2)
 
-        self._logger.debug("serial_open end")
+        self._logger.debug("connect end")
         return True
 
     def serial_error_handler(self) -> bool:
@@ -184,7 +184,7 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
                 pass
 
             self._logger.debug('SEH: serial init')
-            res = self.serial_open()
+            res = self.connect()
             self._logger.debug('SEH end')
             return res
 
@@ -195,14 +195,14 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
             self._logger.debug('SEH end')
             return False
 
-    def serial_close(self) -> bool:
-        self._logger.debug("serial_close start")
+    def disconnect(self) -> bool:
+        self._logger.debug("disconnect start")
 
         if self._ser is None:
-            self._logger.debug("serial_close: Serial not exist")
+            self._logger.debug("disconnect: Serial not exist")
             return True
         elif not self._ser.is_open:
-            self._logger.debug("serial_close: Serial is already close")
+            self._logger.debug("disconnect: Serial is already close")
             return True
         
         if self._ser.is_open:
@@ -210,10 +210,10 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
                 self._ser.close()
                 self._ser = None
                 time.sleep(self._timeout*2)
-                self._logger.debug("serial_close: Serial closed")
+                self._logger.debug("disconnect: Serial closed")
                 return True
             except Exception as e:
-                self._logger.error("serial_close: Exception on Serial Closure")
+                self._logger.error("disconnect: Exception on Serial Closure")
                 # self._logger.error( e, exc_info=True)
                 return False
 
@@ -235,7 +235,7 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
 
         return status
 
-    def serial_is_working(self) -> bool:
+    def connection_is_working(self) -> bool:
         if self.get_phase_a_voltage() == -1:
             return False
         return True
@@ -1864,7 +1864,7 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
     ##
     #@brief  This command test if the communication is working 
     #@retval  List of [ bool 0 not working / 1 for working, ERROR class/enumeration]
-    def communication_is_working(self) -> list:
+    def connection_is_working(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         temperature, error = self.get_board_temperature()
         time.sleep(0.2)

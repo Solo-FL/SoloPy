@@ -36,3 +36,6 @@ while True:
     print("Read from SOLO " + str(NumberOfPoles_read))
 
     time.sleep(1)
+
+#ensure close the serial
+mySolo.disconnect() 

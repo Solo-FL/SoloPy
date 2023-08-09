@@ -46,10 +46,10 @@ actualMotorSpeed = 0
 
 # wait here till communication is established
 print("Trying to Connect To SOLO")
-communication_is_working = False
-while communication_is_working is False:
+connection_is_working = False
+while connection_is_working is False:
     time.sleep(1)
-    communication_is_working, error = mySolo.communication_is_working()
+    connection_is_working, error = mySolo.connection_is_working()
 print("Communication Established succuessfully!")
 
 # Initial Configuration of the device and the Motor
@@ -104,3 +104,6 @@ while True:
     desiredMotorSpeed = 0
     mySolo.set_speed_reference(desiredMotorSpeed)
     time.sleep(5)
+
+#ensure close the serial
+mySolo.disconnect() 

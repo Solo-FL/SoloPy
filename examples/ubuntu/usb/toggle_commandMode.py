@@ -65,3 +65,6 @@ while True:
 
             # we print the info:
             print("COMMAND MODE SET: " + str(commandMode) + " ERROR: " + str(error))
+
+#ensure close the serial
+mySolo.disconnect() 

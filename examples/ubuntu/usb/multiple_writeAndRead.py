@@ -55,3 +55,6 @@ while True:
     print(encoderLines_read)
 
     time.sleep(1)
+
+#ensure close the serial
+mySolo.disconnect() 

@@ -23,7 +23,7 @@ import random
 mySolo = solo.SOLOMotorControllersCanopen(0, solo.CAN_BUS_BAUD_RATE.RATE_1000)
 
 def test_connection():
-    result, error = mySolo.communication_is_working()
+    result, error = mySolo.connection_is_working()
     assert result == True
 
 def tests():

@@ -21,7 +21,7 @@ import random
 mySolo = solo.SoloMotorControllerUart()
 
 def test_connection():
-    result, error = mySolo.communication_is_working()
+    result, error = mySolo.connection_is_working()
     assert result == True
 
 def tests():

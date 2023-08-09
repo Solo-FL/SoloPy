@@ -1966,7 +1966,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     ##
     #@brief  This command test if the communication is working 
     #@retval  List of [ bool 0 not working / 1 for working, ERROR class/enumeration]
-    def communication_is_working(self) -> list:
+    def connection_is_working(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
         temperature, error = self.get_board_temperature()
         time.sleep(0.2)

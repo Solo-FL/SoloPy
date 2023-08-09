@@ -453,7 +453,7 @@ class SOLOMotorControllers(Interface):
     def get_speed_deceleration_value(self) -> list:
         pass
 
-    def communication_is_working(self) -> list:
+    def connection_is_working(self) -> list:
         pass
 
     def get_encoder_index_counts(self) -> list:

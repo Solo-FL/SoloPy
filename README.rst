@@ -120,6 +120,11 @@ then go to reboot
 
    $ sudo ip link set can0 up type can bitrate 1000000
 
+
+.. note::
+   To automatically start the CAN interface on boot, you can install a systemd service.
+   This can be done with the script ``scripts/install_can_service.sh``
+
 **Notes**
 
 - The bit-rate has to be the same as the one used in the code

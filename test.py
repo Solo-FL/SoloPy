@@ -15,7 +15,7 @@ import time
 # sudo ip link set can0 up type can bitrate 1000000
 # mySolo = solo.SOLOMotorControllersCanopen(0,solo.CAN_BUS_BAUD_RATE.RATE_1000 )
 
-mySolo = solo.SoloMotorControllerUart()
+mySolo = solo.SoloMotorControllerUart("/dev/ttyS0",0, UART_BAUD_RATE.RATE_937500,1)
 
 while True:
     a, b = mySolo.get_bus_voltage()

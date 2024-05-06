@@ -9,7 +9,7 @@ or read all the parameters that are stored or existing in the command set of SOL
 More information about SoloPy on `the SOLO website <https://www.solomotorcontrollers.com/>`_.
 For List of All the Available Methods Read the `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__
 
-SoloPy allows SOLO devices to be used in this conditions: 
+SoloPy allows SOLO devices to be used in this conditions:
 
 - USB Communication with Windows OS or Linux
 
@@ -35,8 +35,8 @@ If you have installed the library and you want to update it on Linux, RASPBERRY 
 
 .. code-block::
 
-   $ pip install --upgrade SoloPy 
-   
+   $ pip install --upgrade SoloPy
+
 
 
 USB Communication with Windows OS or Linux Note
@@ -54,7 +54,7 @@ USB Communication with Windows OS or Linux Note
 
 UART protocol with RASPBERRY PI Note
 =============
-In order to enable UART Protocol on Raspberry Pi you need to follow this one time process. 
+In order to enable UART Protocol on Raspberry Pi you need to follow this one time process.
 
 1. In Raspberry Pi, enter following command in Terminal to enable UART
 
@@ -79,15 +79,15 @@ CanOpen protocol with RASPBERRY PI Note
 =============
 In order to enable CanOpen Protocol on Raspberry Pi you need to follow this process one time
 
-1. turn SPI on in raspberry pi: 
+1. turn SPI on in raspberry pi:
 
 .. code-block::
 
-   $ sudo raspi-config   
+   $ sudo raspi-config
 
-then go to interfaces 
+then go to interfaces
 
-then go to SPI and turn on 
+then go to SPI and turn on
 
 then go to reboot
 
@@ -114,17 +114,22 @@ then go to reboot
 
 **Every time** you reboot RASPBERRY PI you need to follow this process
 
-1- type this command 
+1- type this command
 
 .. code-block::
 
    $ sudo ip link set can0 up type can bitrate 1000000
 
-**Notes** 
+
+.. note::
+   To automatically start the CAN interface on boot, you can install a systemd service.
+   This can be done with the script ``scripts/install_can_service.sh``
+
+**Notes**
 
 - The bit-rate has to be the same as the one used in the code
 
-- The following CAN transceiver module  `"PiCAN2" <https://copperhilltech.com/pican-2-can-bus-interface-for-raspberry-pi/>`__ has been used to test the library 
+- The following CAN transceiver module  `"PiCAN2" <https://copperhilltech.com/pican-2-can-bus-interface-for-raspberry-pi/>`__ has been used to test the library
 
 
 Dependencies

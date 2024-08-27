@@ -81,3 +81,5 @@ Object_MotionProfileVariable2 =                  0x3041
 Object_MotionProfileVariable3 =                  0x3042
 Object_MotionProfileVariable4 =                  0x3043
 Object_MotionProfileVariable5 =                  0x3044
+
+Object_RegenerationCurrentLimit = 0x304B

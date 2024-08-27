@@ -384,3 +384,8 @@ def set_motion_profile_variable5_input_validation(motion_profile_variable5: floa
     if (motion_profile_variable5 < 0 or motion_profile_variable5 > 16000):
         return False, ERROR.OUT_OF_RANGE_SETTING, ConstantCommon.InputOutOfRange
     return True, ERROR.NO_ERROR_DETECTED, ""
+
+def set_regeneration_current_limit_input_validation(regeneration_current_limit : float) -> list:
+    if (regeneration_current_limit < 0 or regeneration_current_limit > 32):
+        return False, ERROR.OUT_OF_RANGE_SETTING, ConstantCommon.InputOutOfRange
+    return True, ERROR.NO_ERROR_DETECTED, ""

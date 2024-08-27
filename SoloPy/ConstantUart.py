@@ -73,6 +73,8 @@ WriteMotionProfileVariable3 =        0x33
 WriteMotionProfileVariable4 =        0x34
 WriteMotionProfileVariable5 =        0x35
 
+WriteRegenerationCurrentLimit =  0x39
+
 ReadDeviceAddress = 0x81
 ReadPhaseAVoltage = 0x82
 ReadPhaseBVoltage = 0x83
@@ -140,3 +142,5 @@ ReadMotionProfileVariable2 =         0xBD
 ReadMotionProfileVariable3 =         0xBE
 ReadMotionProfileVariable4 =         0xBF
 ReadMotionProfileVariable5 =         0xC0
+
+ReadRegenerationCurrentLimit =  0xC8

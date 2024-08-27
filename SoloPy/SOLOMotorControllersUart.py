@@ -1128,6 +1128,26 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
                data[0], data[1], data[2], data[3]]
         return self.__exec_cmd(cmd)
 
+    ##
+    #@brief  This command reads the value of the regeneration current sent back from the
+    #           Motor to the Power Supply during decelerations
+    #          .The method refers to the Uart Write command: 0xC8
+    #@param  current_limit  a float value [Amps]     
+    #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
+    def set_regeneration_current_limit(self, regeneration_current_limit: float) -> list:
+        error = ERROR.NO_PROCESSED_COMMAND
+        InputValidate, error, logMsg = set_regeneration_current_limit_input_validation(regeneration_current_limit)
+        if (InputValidate is False):
+            self._logger.info(logMsg)
+            return False, error
+
+        regeneration_current_limit = float(regeneration_current_limit)
+        data = convert_to_data(regeneration_current_limit, DATA_TYPE.SFXT)
+        cmd = [self._address, ConstantUart.WriteRegenerationCurrentLimit,
+               data[0], data[1], data[2], data[3]]
+
+        return self.__exec_cmd(cmd)
+    
 # ----------------------------------------------
 # ---------------------Read---------------------
 # ----------------------------------------------
@@ -1990,6 +2010,21 @@ class SoloMotorControllerUart(implements(SOLOMotorControllers)):
     #@retval List of [ Motion Profile Variable5, ERROR class/enumeration]
     def get_motion_profile_variable5(self) -> list:
         cmd = [self._address, ConstantUart.ReadMotionProfileVariable5,
+               0x00, 0x00, 0x00, 0x00]
+        result, error = self.__exec_cmd(cmd)
+        if (result):
+            data = get_data(cmd)
+            return convert_from_data(data, DATA_TYPE.SFXT), ERROR.NO_ERROR_DETECTED
+        else:
+            return -1, error
+
+    ##
+    #@brief  This command reads the value of the regeneration current sent back from the
+    #           Motor to the Power Supply during decelerations
+    #          .The method refers to the Uart Read command: 0x39
+    #@retval  List of [float [Amps], ERROR class/enumeration]
+    def get_regeneration_current_limit(self) -> list:
+        cmd = [self._address, ConstantUart.ReadRegenerationCurrentLimit,
                0x00, 0x00, 0x00, 0x00]
         result, error = self.__exec_cmd(cmd)
         if (result):

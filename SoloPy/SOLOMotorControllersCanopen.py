@@ -1170,6 +1170,24 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
         result, error = self.CANOpenTransmit(
             self._address, ConstantCanopen.Object_MotionProfileVariable5, informationToSend)
         return result, error
+
+    ##
+    #@brief  This command defines the maximum allowed regeneration current sent back from the
+    #           Motor to the Power Supply during decelerations
+    #           .The method refers to the Object Dictionary: 0x304B
+    #@param  regeneration_current_limit  a float value [Amps]     
+    #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
+    def set_regeneration_current_limit(self, regeneration_current_limit: float) -> list:
+        error = ERROR.NO_PROCESSED_COMMAND
+        InputValidate, error, logMsg = set_regeneration_current_limit_input_validation(regeneration_current_limit)
+        if (InputValidate is False):
+            self._logger.info(logMsg)
+            return False, error
+        regeneration_current_limit = float(regeneration_current_limit)
+        informationToSend = convert_to_data(regeneration_current_limit, DATA_TYPE.SFXT)
+        result, error = self.CANOpenTransmit(
+            self._address, ConstantCanopen.Object_RegenerationCurrentLimit, informationToSend)
+        return result, error
 # ----------------------------------------------
 # ---------------------Read---------------------
 # ----------------------------------------------
@@ -2071,6 +2089,21 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
         error = ERROR.NO_PROCESSED_COMMAND
         result, error, informationReceived = self.CANOpenReceive(
             self._address, ConstantCanopen.Object_MotionProfileVariable5, informationToSend)
+        if (error == ERROR.NO_ERROR_DETECTED) and (result is True):
+            return convert_from_data(informationReceived, DATA_TYPE.SFXT), error
+        return -1.0, error
+
+    ##
+    #@brief  This command reads the value of the regeneration current sent back from the
+    #           Motor to the Power Supply during decelerations
+    #          .The method refers to the Object Dictionary: 0x304B
+    #@retval List of [float [Amps], ERROR class/enumeration]
+    def get_current_limit(self) -> list:
+        informationToSend = [0x00, 0x00, 0x00, 0x00]
+        informationReceived = []
+        error = ERROR.NO_PROCESSED_COMMAND
+        result, error, informationReceived = self.CANOpenReceive(
+            self._address, ConstantCanopen.Object_RegenerationCurrentLimit, informationToSend)
         if (error == ERROR.NO_ERROR_DETECTED) and (result is True):
             return convert_from_data(informationReceived, DATA_TYPE.SFXT), error
         return -1.0, error

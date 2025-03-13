@@ -785,7 +785,7 @@ class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
     #@retval List of [bool 0 fail / 1 for success, ERROR class/enumeration]
     def reset_position_to_zero(self) -> list:
         error = ERROR.NO_PROCESSED_COMMAND
-        informationToSend = [0x00, 0x00, 0x00, 0x00]
+        informationToSend = [0x00, 0x00, 0x00, 0x01]
         result, error = self.CANOpenTransmit(
             self._address, ConstantCanopen.Object_ResetPositionToZero, informationToSend)
         return result, error

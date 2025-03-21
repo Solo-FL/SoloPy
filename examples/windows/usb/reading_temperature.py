@@ -1,10 +1,10 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
 # Title: SoloPy
 # Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.0.0
+# Date: 2025
+# Code version: 4.0.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -13,11 +13,10 @@
 # every second we print the value of the temperature
 
 import SoloPy as solo
-
 import time
 
 # instanciate a SOLO object:
-mySolo = solo.SoloMotorControllerUart("COM3", 0, solo.UART_BAUD_RATE.RATE_937500)
+mySolo = solo.SoloMotorControllerUart("COM3", 0, solo.UartBaudRate.RATE_937500)
 
 # loop actions
 while True:
@@ -29,6 +28,3 @@ while True:
     print("Error: " + str(error))
 
     time.sleep(1)
-
-#ensure close the serial
-mySolo.disconnect() 

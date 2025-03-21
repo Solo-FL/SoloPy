@@ -1,142 +1,143 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+## @package ConstantUart.py
+#  @author  SOLOMotorControllers
+#  @brief   This file contains all the uart common definitions
+#           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
+#  @date    Date: 2025
+#  @version 4.0.0
 
-# Title: SoloPy
-# Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.1.0
-# Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
-# This Library is made by SOLOMotorControllers.COM
-# please visit:  https://www.SOLOMotorControllers.com/
+## @attention
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
-ReadData = 0x00  # 0x00000000
+READ_DATA = 0x00  # 0x00000000
 INITIATOR = 0xFF  # 0xFFFF
-BroadcastAddress = 0xFF
+BROADCAST_ADDRESS = 0xFF
 ENDING = 0xFE
-ERROR = 0xEE  # 0xEEEEEEEE
+Error = 0xEE  # 0xEEEEEEEE
 CRC = 0x00
-WriteDeviceAddress = 0x01
-WriteCommandMode = 0x02
-WriteCurrentLimit = 0x03
-WriteTorqueReferenceIq = 0x04
-WriteSpeedReference = 0x05
-WritePowerReference = 0x06
-WriteMotorParametersIdentification = 0x07
-WriteEmergencyStop = 0x08
-WriteOutputPwmFrequencyKhz = 0x09
-WriteSpeedControllerKp = 0x0A
-WriteSpeedControllerKi = 0x0B
-WriteMotorDirection = 0x0C
-WriteMotorResistance = 0x0D
-WriteMotorInductance = 0x0E
-WriteMotorPolesCounts = 0x0F
-WriteIncrementalEncoderLines = 0x10
-WriteSpeedLimit = 0x11
-WriteResetAddress = 0x12
-WriteFeedbackControlMode = 0x13
-WriteResetFactory = 0x14
-WriteMotorType = 0x15
-WriteControlMode = 0x16
-WriteCurrentControllerKp = 0x17
-WriteCurrentControllerKi = 0x18
-WriteMonitoringMode = 0x19
-WriteMagnetizingCurrentIdReference = 0x1A
-WritePositionReference = 0x1B
-WritePositionControllerKp = 0x1C
-WritePositionControllerKi = 0x1D
-WriteResetPositionToZero = 0x1F  # Home
-WriteOverwriteErrorRegister = 0x20
-# Set Sensorless Observer Gain for Normal BLDC-PMSM Motors
-WriteObserverGainBldcPmsm = 0x21
-# Set Sensorless Observer Gain for Ultra-Fast Brushless Motor
-WriteObserverGainBldcPmsmUltrafast = 0x22
+WRITE_DEVICE_ADDRESS = 0x01
+WRITE_COMMAND_MODE = 0x02
+WRITE_CURRENT_LIMIT = 0x03
+WRITE_TORQUE_REFERENCE_IQ = 0x04
+WRITE_SPEED_REFERENCE = 0x05
+WRITE_POWER_REFERENCE = 0x06
+WRITE_MOTOR_PARAMETERS_IDENTIFICATION = 0x07
+WRITE_DRIVE_DISABLE_ENABLE = 0x08
+WRITE_OUTPUT_PWM_FREQUENCY_KHZ = 0x09
+WRITE_SPEED_CONTROLLER_KP = 0x0A
+WRITE_SPEED_CONTROLLER_KI = 0x0B
+WRITE_MOTOR_DIRECTION = 0x0C
+WRITE_MOTOR_RESISTANCE = 0x0D
+WRITE_MOTOR_INDUCTANCE = 0x0E
+WRITE_MOTOR_POLES_COUNTS = 0x0F
+WRITE_INCREMENTAL_ENCODER_LINES = 0x10
+WRITE_SPEED_LIMIT = 0x11
+WRITE_RESET_ADDRESS = 0x12
+WRITE_FEEDBACK_CONTROL_MODE = 0x13
+WRITE_RESET_FACTORY = 0x14
+WRITE_MOTOR_TYPE = 0x15
+WRITE_CONTROL_MODE = 0x16
+WRITE_CURRENT_CONTROLLER_KP = 0x17
+WRITE_CURRENT_CONTROLLER_KI = 0x18
+WRITE_MONITORING_MODE = 0x19
+WRITE_MAGNETIZING_CURRENT_REFERENCE = 0x1A
+WRITE_POSITION_REFERENCE = 0x1B
+WRITE_POSITION_CONTROLLER_KP = 0x1C
+WRITE_POSITION_CONTROLLER_KI = 0x1D
+WRITE_RESET_POSITION_TO_ZERO = 0x1F  
+WRITE_OVERWRITE_ERROR_REGISTER = 0x20
+WRITE_ZSFT_INJECTION_AMPLITUDE = 0x21
+WRITE_ZSFT_POLARITY_AMPLITUDE = 0x22
+WRITE_ZSFT_INJECTION_FREQUENCY = 0x24
 # Set Sensorless Observer Gain for DC Motor
-WriteObserverGainDc = 0x23
-# Set Sensorless Observer Filter Gain for Normal Brushless Motor
-WriteFilterGainBldcPmsm = 0x24
-# Set Sensorless Observer Filter Gain for ultra-fast Brushless Motor
-WriteFilterGainBldcPmsmUltrafast = 0x25
+WRITE_OBSERVER_GAIN_DC = 0x23
+WRITE_SENSORLESS_TRANSITION_SPEED = 0x25
 # Set UART line baud-rate - 937500 / 115200 [ bits/s]
-WriteUartBaudRate = 0x26
-WriteSensorCalibration = 0x27
-WriteEncoderHallCcwOffset = 0x28
-WriteEncoderHallCwOffset = 0x29
-WriteSpeedAccelerationValue = 0x2A
-WriteSpeedDecelerationValue = 0x2B
-WriteCanBusBaudRate = 0x2C
-WriteCanBusBaudRate = 0x2C
-WriteASRDC =                         0x2D
-WriteMotionProfileMode =             0x30
-WriteMotionProfileVariable1 =         0x31
-WriteMotionProfileVariable2 =        0x32
-WriteMotionProfileVariable3 =        0x33
-WriteMotionProfileVariable4 =        0x34
-WriteMotionProfileVariable5 =        0x35
+WRITE_UART_BAUDRATE = 0x26
+WRITE_SENSOR_CALIBRATION = 0x27
+WRITE_ENCODER_HALL_CCW_OFFSET = 0x28
+WRITE_ENCODER_HALL_CW_OFFSET = 0x29
+WRITE_SPEED_ACCELERATION_VALUE = 0x2A
+WRITE_SPEED_DECELERATION_VALUE = 0x2B
+WRITE_CAN_BUS_BAUDRATE = 0x2C
+WRITE_ASRDC =                         0x2D
+WRITE_MOTION_PROFILE_MODE =             0x30
+WRITE_MOTION_PROFILE_VARIABLE1 =         0x31
+WRITE_MOTION_PROFILE_VARIABLE2 =        0x32
+WRITE_MOTION_PROFILE_VARIABLE3 =        0x33
+WRITE_MOTION_PROFILE_VARIABLE4 =        0x34
+WRITE_MOTION_PROFILE_VARIABLE5 =        0x35
+WRITE_DIGITAL_OUTPUTS_REGISTER =        0x38
+WRITE_REGENERATION_CURRENT_LIMIT =        0x39
+WRITE_POSITION_SENSOR_DIGITAL_FILTER_LEVEL =        0x3A
 
-ReadDeviceAddress = 0x81
-ReadPhaseAVoltage = 0x82
-ReadPhaseBVoltage = 0x83
-ReadPhaseACurrent = 0x84
-ReadPhaseBCurrent = 0x85
-ReadBusVoltage = 0x86
-ReadDcMotorCurrentIm = 0x87
-ReadDcMotorVoltageVm = 0x88
-ReadSpeedControllerKp = 0x89
-ReadSpeedControllerKi = 0x8A
-ReadOutputPwmFrequencyHz = 0x8B
-ReadCurrentLimit = 0x8C
-ReadQuadratureCurrentIqFeedback = 0x8D
-ReadMagnetizingCurrentIdFeedback = 0x8E  # Magnetizing
-ReadMotorPolesCounts = 0x8F
-ReadIncrementalEncoderLines = 0x90
-ReadCurrentControllerKp = 0x91
-ReadCurrentControllerKi = 0x92
-ReadBoardTemperature = 0x93
-ReadMotorResistance = 0x94
-ReadMotorInductance = 0x95
-ReadSpeedFeedback = 0x96
-ReadMotorType = 0x97
-# TODO: 0x98
-ReadFeedbackControlMode = 0x99
-ReadCommandMode = 0x9A
-ReadControlMode = 0x9B
-ReadSpeedLimit = 0x9C
-ReadPositionControllerKp = 0x9D
-ReadPositionControllerKi = 0x9E
-# TODO: 0x9F
-ReadPositionCountsFeedback = 0xA0
-ReadErrorRegister = 0xA1
-ReadDeviceFirmwareVersion = 0xA2
-ReadDeviceHardwareVersion = 0xA3
-ReadTorqueReferenceIq = 0xA4  # Read Torque /“Iq” Reference
-ReadSpeedReference = 0xA5  # Read Speed Reference
-ReadMagnetizingCurrentIdReference = 0xA6  # Read Magnetizing Current / “Id” Reference
-ReadPositionReference = 0xA7
-ReadPowerReference = 0xA8
-ReadMotorDirection = 0xA9
-# Read Sensorless Observer Gain for Normal BLDC-PMSM Motors
-ReadObserverGainBldcPmsm = 0xAA
-# Read Sensorless Observer Gain for Ultra-fast BLDC-PMSM Motors
-ReadObserverGainBldcPmsmUltrafast = 0xAB
-# Read Observer Gain for DC Motor
-ReadObserverGainDc = 0xAC
-# Read Sensorless Observer Filter Gain for Normal BLDC-PMSM Motors
-ReadFilterGainBldcPmsm = 0xAD
-# Read Sensorless Observer Filter Gain for Ultra Fast BLDC-PMSM Motors
-ReadFilterGainBldcPmsmUltrafast = 0xAE
+READ_DEVICE_ADDRESS = 0x81
+READ_PHASEA_VOLTAGE = 0x82
+READ_PHASEB_VOLTAGE = 0x83
+READ_PHASEA_CURRENT = 0x84
+READ_PHASEB_CURRENT = 0x85
+READ_BUS_VOLTAGE = 0x86
+READ_DC_MOTOR_CURRENT_IM = 0x87
+READ_DC_MOTOR_VOLTAGE_VM = 0x88
+READ_SPEED_CONTROLLER_KP = 0x89
+READ_SPEED_CONTROLLER_KI = 0x8A
+READ_OUTPUT_PWM_FREQUENCY_HZ = 0x8B
+READ_CURRENT_LIMIT = 0x8C
+READ_QUADRATURE_CURRENT_IQ_FEEDBACK = 0x8D
+READ_MAGNETIZING_CURRENT_ID_FEEDBACK = 0x8E
+READ_MOTOR_POLES_COUNTS = 0x8F
+READ_INCREMENTAL_ENCODER_LINES = 0x90
+READ_CURRENT_CONTROLLER_KP = 0x91
+READ_CURRENT_CONTROLLER_KI = 0x92
+READ_BOARD_TEMPERATURE = 0x93
+READ_MOTOR_RESISTANCE = 0x94
+READ_MOTOR_INDUCTANCE = 0x95
+READ_SPEED_FEEDBACK = 0x96
+READ_MOTOR_TYPE = 0x97
+# Reserved for the future 0x98
+READ_FEEDBACK_CONTROL_MODE = 0x99
+READ_COMMAND_MODE = 0x9A
+READ_CONTROL_MODE = 0x9B
+READ_SPEED_LIMIT = 0x9C
+READ_POSITION_CONTROLLER_KP = 0x9D
+READ_POSITION_CONTROLLER_KI = 0x9E
+# Reserved for the future 0x9F
+READ_POSITION_COUNTS_FEEDBACK = 0xA0
+READ_ERROR_REGISTER = 0xA1
+READ_DEVICE_FIRMWARE_VERSION = 0xA2
+READ_DEVICE_HARDWARE_VERSION = 0xA3
+READ_TORQUE_REFERENCE_IQ = 0xA4  # Read Torque /“Iq” Reference
+READ_SPEED_REFERENCE = 0xA5  # Read Speed Reference
+READ_MAGNETIZING_CURRENT_ID_REFERENCE = 0xA6  # Read Magnetizing Current / “Id” Reference
+READ_POSITION_REFERENCE = 0xA7
+READ_POWER_REFERENCE = 0xA8
+READ_MOTOR_DIRECTION = 0xA9
+READ_ZSFT_INJECTION_AMPLITUDE = 0xAA
+READ_ZSFT_POLARITY_AMPLITUDE = 0xAB
+READ_OBSERVER_GAIN_DC = 0xAC
+READ_ZSFT_INJECTION_FREQUENCY = 0xAD
+READ_FILTER_GAIN_BLDC_PMSM = 0xAD
+READ_SENSORLESS_TRANSITION_SPEED = 0xAE
 # Read Motor’s Angle
-Read3PhaseMotorAngle = 0xB0
-ReadEncoderHallCcwOffset = 0xB1
-ReadEncoderHallCwOffset = 0xB2
-ReadUartBaudRate = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )
-ReadSpeedAccelerationValue = 0xB4
-ReadSpeedDecelerationValue = 0xB5
-ReadCanBusBaudRate = 0xB6
-ReadASRDC =                           0xB7
-ReadEncoderIndexCounts = 0xB8
-ReadMotionProfileMode =               0xBB
-ReadMotionProfileVariable1 =         0xBC
-ReadMotionProfileVariable2 =         0xBD
-ReadMotionProfileVariable3 =         0xBE
-ReadMotionProfileVariable4 =         0xBF
-ReadMotionProfileVariable5 =         0xC0
+READ_3PHASE_MOTOR_ANGLE = 0xB0
+READ_ENCODER_HALL_CCW_OFFSET = 0xB1
+READ_ENCODER_HALL_CW_OFFSET = 0xB2
+READ_UART_BAUD_RATE = 0xB3  # 0 / 1 ( 937500 / 115200 [bits/s] )
+READ_SPEED_ACCELERATION_VALUE = 0xB4
+READ_SPEED_DECELERATION_VALUE = 0xB5
+READ_CANBUS_BAUD_RATE = 0xB6
+READ_ASRDC =                           0xB7
+READ_ENCODER_INDEX_COUNTS = 0xB8
+READ_MOTION_PROFILE_MODE =               0xBB
+READ_MOTION_PROFILE_VARIABLE1 =         0xBC
+READ_MOTION_PROFILE_VARIABLE2 =         0xBD
+READ_MOTION_PROFILE_VARIABLE3 =         0xBE
+READ_MOTION_PROFILE_VARIABLE4 =         0xBF
+READ_MOTION_PROFILE_VARIABLE5 =         0xC0
+READ_PT1000_SENSOR_VOLTAGE =         0xC3
+READ_DIGITAL_OUTPUT_REGISTER =         0xC4
+READ_DIGITAL_INPUT_REGISTER =         0xC5
+READ_ANALOQUE_INPUT =         0xC6
+READ_DRIVE_DISABLE_ENABLE =            0xC7
+READ_REGENERATION_CURRENT_LIMIT =      0xC8
+READ_POSITION_SENSOR_DIGITAL_FILTER_LEVEL =      0xC9

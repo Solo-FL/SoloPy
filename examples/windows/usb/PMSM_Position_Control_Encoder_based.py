@@ -1,10 +1,10 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
 # Title: SoloPy
 # Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.0.0
+# Date: 2025
+# Code version: 4.0.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -20,7 +20,7 @@ import time
 # to know more please read: https:#www.solomotorcontrollers.com/how-to-connect-calibrate-incremental-encoder-with-solo/
 
 # instanciate a SOLO object:
-mySolo = solo.SoloMotorControllerUart("COM3", 0, solo.UART_BAUD_RATE.RATE_937500)
+mySolo = solo.SoloMotorControllerUart("COM3", 0, solo.UartBaudRate.RATE_937500)
 
 # Desired Switching or PWM Frequency at Output
 pwmFrequency = 20
@@ -63,10 +63,10 @@ actualMotorPosition = 0
 
 # wait here till communication is established
 print("Trying to Connect To SOLO")
-connection_is_working = False
-while connection_is_working is False:
+communication_is_working = False
+while communication_is_working is False:
     time.sleep(1)
-    connection_is_working, error = mySolo.connection_is_working()
+    communication_is_working, error = mySolo.communication_is_working()
 print("Communication Established succuessfully!")
 
 # Initial Configuration of the device and the Motor
@@ -74,21 +74,21 @@ mySolo.set_output_pwm_frequency_khz(pwmFrequency)
 mySolo.set_current_limit(currentLimit)
 mySolo.set_motor_poles_counts(numberOfPoles)
 mySolo.set_incremental_encoder_lines(numberOfEncoderLines)
-mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
-mySolo.set_motor_type(solo.MOTOR_TYPE.BLDC_PMSM)
+mySolo.set_command_mode(solo.CommandMode.DIGITAL)
+mySolo.set_motor_type(solo.MotorType.BLDC_PMSM)
 
 # run the motor identification to Auto-tune the current controller gains Kp and Ki needed for Torque Loop
 # run ID. always after selecting the Motor Type!
 # ID. doesn't need to be called everytime, only one time after wiring up the Motor will be enough
 # the ID. values will be remembered by SOLO after power recycling
-mySolo.motor_parameters_identification(solo.ACTION.START)
+mySolo.motor_parameters_identification(solo.Action.START)
 print("Identifying the Motor")
 # wait at least for 2sec till ID. is done
 time.sleep(2)
 
 # Operate while using Quadrature Incremental Encoders
-mySolo.set_feedback_control_mode(solo.FEEDBACK_CONTROL_MODE.ENCODERS)
-mySolo.set_control_mode(solo.CONTROL_MODE.POSITION_MODE)
+mySolo.set_feedback_control_mode(solo.FeedbackControlMode.ENCODERS)
+mySolo.set_control_mode(solo.ControlMode.POSITION_MODE)
 # Speed Controller Tunings
 mySolo.set_speed_controller_kp(speedControllerKp)
 mySolo.set_speed_controller_ki(speedControllerKi)
@@ -123,6 +123,3 @@ while True:
     time.sleep(8)
     actualMotorPosition = mySolo.get_position_counts_feedback()
     print("Number of Pulses passed: " + str(actualMotorPosition))
-
-#ensure close the serial
-mySolo.disconnect() 

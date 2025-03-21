@@ -1,83 +1,107 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+## @package ConstantCanopen.py
+#  @author  SOLOMotorControllers
+#  @brief   This file contains all the canopen common definitions
+#           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
+#  @date    Date: 2025
+#  @version 4.0.0
 
-# Title: SoloPy
-# Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.1.0
-# Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
-# This Library is made by SOLOMotorControllers.COM
-# please visit:  https://www.SOLOMotorControllers.com/
+## @attention
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
-Object_ReadErrorRegister = 0x1001
-Object_GuardTime = 0x100C
-Object_LifeTimeFactor = 0x100D
-Object_ProducerHeartbeatTime = 0x1017
-# ***** SOLO UNO CANOPEN Objects
-Object_SetDeviceAddress = 0x3001
-Object_CommandMode = 0x3002
-Object_CurrentLimit = 0x3003
-Object_TorqueReferenceIq = 0x3004
-Object_SpeedReference = 0x3005
-Object_PowerReference = 0x3006
-Object_MotorParametersIdentification = 0x3007
-Object_EmergencyStop = 0x3008
-Object_OutputPwmFrequencyKhz = 0x3009
-Object_SpeedControllerKp = 0x300A
-Object_SpeedControllerKi = 0x300B
-Object_MotorDirection = 0x300C
-Object_MotorResistance = 0x300D
-Object_MotorInductance = 0x300E
-Object_MotorPolesCounts = 0x300F
-Object_IncrementalEncoderLines = 0x3010
-Object_SpeedLimit = 0x3011
+##
+# @addtogroup NMT_Control_Objects NMT Control Objects
+# @{
+OBJECT_READ_ERROR_REGISTER = 0x1001
+OBJECT_GUARDTIME = 0x100C
+OBJECT_LIFETIME_FACTOR = 0x100D
+OBJECT_PRODUCER_HEARTBEAT_TIME = 0x1017
+##
+# @}
+
+##
+# @addtogroup SOLO_UNO_CANOPEN_Objects SOLO UNO CANOPEN Objects
+# @{
+OBJECT_SET_DEVICE_ADDRESS = 0x3001
+OBJECT_COMMAND_MODE = 0x3002
+OBJECT_CURRENT_LIMIT = 0x3003
+OBJECT_TORQUE_REFERENCE_IQ = 0x3004
+OBJECT_SPEED_REFERENCE = 0x3005
+OBJECT_POWER_REFERENCE = 0x3006
+OBJECT_MOTOR_PARAMETERS_IDENTIFICATION = 0x3007
+OBJECT_DRIVE_DISABLE_ENABLE = 0x3008
+OBJECT_OUTPUT_PWMFREQUENCY_KHZ = 0x3009
+OBJECT_SPEED_CONTROLLER_KP = 0x300A
+OBJECT_SPEED_CONTROLLER_KI = 0x300B
+OBJECT_MOTOR_DIRECTION = 0x300C
+OBJECT_MOTOR_RESISTANCE = 0x300D
+OBJECT_MOTOR_INDUCTANCE = 0x300E
+OBJECT_MOTOR_POLES_COUNTS = 0x300F
+OBJECT_INCREMENTAL_ENCODER_LINES = 0x3010
+OBJECT_SPEED_LIMIT = 0x3011
 # Reserved Object                                      0x3012
-Object_FeedbackControlMode = 0x3013
-Object_ResetFactory = 0x3014
-Object_MotorType = 0x3015
-Object_ControlMode = 0x3016
-Object_CurrentControllerKp = 0x3017
-Object_CurrentControllerKi = 0x3018
+OBJECT_FEEDBACK_CONTROL_MODE = 0x3013
+OBJECT_RESET_FACTORY = 0x3014
+OBJECT_MOTOR_TYPE = 0x3015
+OBJECT_CONTROL_MODE = 0x3016
+OBJECT_CURRENT_CONTROLLER_KP = 0x3017
+OBJECT_CURRENT_CONTROLLER_KI = 0x3018
 # Reserved Object                                      0x3019
-Object_MagnetizingCurrentIdReference = 0x301A
-Object_PositionReference = 0x301B
-Object_PositionControllerKp = 0x301C
-Object_PositionControllerKi = 0x301D
+OBJECT_MAGNETIZING_CURRENTID_REFERENCE = 0x301A
+OBJECT_POSITION_REFERENCE = 0x301B
+OBJECT_POSITION_CONTROLLER_KP = 0x301C
+OBJECT_POSITION_CONTROLLER_KI = 0x301D
 # Reserved Object                                      0x301E
-Object_ResetPositionToZero = 0x301F
-Object_OverwriteErrorRegister = 0x3020
-Object_ObserverGainBldcPmsm = 0x3021
-Object_ObserverGainBldcPmsmUltrafast = 0x3022
-Object_ObserverGainDc = 0x3023
-Object_FilterGainBldcPmsm = 0x3024
-Object_FilterGainBldcPmsmUltrafast = 0x3025
-Object_UartBaudrate = 0x3026
-Object_SensorCalibration = 0x3027
-Object_EncoderHallCcwOffset = 0x3028
-Object_EncoderHallCwOffset = 0x3029
-Object_SpeedAccelerationValue = 0x302A
-Object_SpeedDecelerationValue = 0x302B
-Object_CanbusBaudrate = 0x302C
-Object_PhaseAVoltage = 0x302D
-Object_PhaseBVoltage = 0x302E
-Object_PhaseACurrent = 0x302F
-Object_PhaseBCurrent = 0x3030
-Object_BusVoltage = 0x3031
-Object_DcMotorCurrentIm = 0x3032
-Object_DcMotorVoltageVm = 0x3033
-Object_QuadratureCurrentIqFeedback = 0x3034
-Object_MagnetizingCurrentIdFeedback = 0x3035
-Object_SpeedFeedback = 0x3036
-Object_PositionCountsFeedback = 0x3037
-Object_3PhaseMotorAngle = 0x3038
-Object_BoardTemperature = 0x3039
-Object_DeviceFirmwareVersion = 0x303A
-Object_DeviceHardwareVersion = 0x303B
-Object_EncoderIndexCounts = 0x303D
-Object_ASRDC =                                   0x303E
-Object_MotionProfileMode =                       0x303F
-Object_MotionProfileVariable1 =                  0x3040
-Object_MotionProfileVariable2 =                  0x3041
-Object_MotionProfileVariable3 =                  0x3042
-Object_MotionProfileVariable4 =                  0x3043
-Object_MotionProfileVariable5 =                  0x3044
+OBJECT_RESET_POSITION_TO_ZERO = 0x301F
+OBJECT_OVERWRITE_ERROR_REGISTER = 0x3020
+OBJECT_ZSFT_INJECTION_AMPLITUDE = 0x3021
+OBJECT_ZSFT_POLARITY_AMPLITUDE = 0x3022
+OBJECT_OBSERVER_GAIN_DC = 0x3023
+OBJECT_ZSFT_INJECTION_FREQUENCY = 0x3024
+OBJECT_FILTER_GAIN_BLDC_PMSM = 0x3024
+OBJECT_SENSORLESS_TRANSITION_SPEED = 0x3025
+OBJECT_UART_BAUDRATE = 0x3026
+OBJECT_SENSOR_CALIBRATION = 0x3027
+OBJECT_ENCODER_HALL_CCW_OFFSET = 0x3028
+OBJECT_ENCODER_HALL_CW_OFFSET = 0x3029
+OBJECT_SPEED_ACCELERATION_VALUE = 0x302A
+OBJECT_SPEED_DECELERATION_VALUE = 0x302B
+OBJECT_CANBUS_BAUDRATE = 0x302C
+OBJECT_PHASEA_VOLTAGE = 0x302D
+OBJECT_PHASEB_VOLTAGE = 0x302E
+OBJECT_PHASEA_CURRENT = 0x302F
+OBJECT_PHASEB_CURRENT = 0x3030
+OBJECT_BUS_VOLTAGE = 0x3031
+OBJECT_DC_MOTOR_CURRENT_IM = 0x3032
+OBJECT_DC_MOTOR_VOLTAGE_VM = 0x3033
+OBJECT_QUADRATURE_CURRENT_IQ_FEEDBACK = 0x3034
+OBJECT_MAGNETIZING_CURRENT_ID_FEEDBACK = 0x3035
+OBJECT_SPEED_FEEDBACK = 0x3036
+OBJECT_POSITION_COUNTS_FEEDBACK = 0x3037
+OBJECT_3PHASE_MOTOR_ANGLE = 0x3038
+OBJECT_BOARD_TEMPERATURE = 0x3039
+OBJECT_DEVICE_FIRMWARE_VERSION = 0x303A
+OBJECT_DEVICE_HARDWARE_VERSION =                  0x303B
+OBJECT_ENCODER_INDEX_COUNTS =                     0x303D
+OBJECT_ASRDC =                                   0x303E
+OBJECT_MOTION_PROFILE_MODE =                       0x303F
+OBJECT_MOTION_PROFILE_VARIABLE1 =                  0x3040
+OBJECT_MOTION_PROFILE_VARIABLE2 =                  0x3041
+OBJECT_MOTION_PROFILE_VARIABLE3 =                  0x3042
+OBJECT_MOTION_PROFILE_VARIABLE4 =                  0x3043
+OBJECT_MOTION_PROFILE_VARIABLE5 =                  0x3044
+OBJECT_PT1000_SENSOR_VOLTAGE =               0x3047
+OBJECT_DIGITAL_OUTPUTS_REGISTER =                  0x3048
+OBJECT_DIGITAL_INPUT_REGISTER =               0x3049
+OBJECT_ANALOGUE_INPUT =               0x304A
+OBJECT_REGENERATION_CURRENT_LIMIT =               0x304B
+OBJECT_POSITION_SENSOR_DIGITAL_FILTER_LEVEL =               0x304C
+##
+# @}
+
+PDO_PARAMETERNAME_COUNT =   					    12
+
+RPDO_MIN_COBIB =						        0x200
+RPDO_MAX_COBIB =							    0x27F
+TPDO_MIN_COBIB =							    0x280
+TPDO_MAX_COBIB =							    0x2FF

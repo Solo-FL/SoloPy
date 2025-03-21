@@ -1,13 +1,13 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+## @package ConstantCommon.py
+#  @author  SOLOMotorControllers
+#  @brief   This file contains all the project common definitions
+#           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
+#  @date    Date: 2025
+#  @version 4.0.0
 
-# Title: SoloPy
-# Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.1.0
-# Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
-# This Library is made by SOLOMotorControllers.COM
-# please visit:  https://www.SOLOMotorControllers.com/
+## @attention
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
-InputOutOfRange = "input out of range, set function will not be executed"
-InputNeedEnum = "the input is an enum, function will not be executed"
+INPUT_OUT_OF_RANGE = "input out of range, set function will not be executed"
+INPUT_NEED_ENUM = "the input is an enum, function will not be executed"

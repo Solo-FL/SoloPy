@@ -1,31 +1,36 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
+
 setup(
-  name = 'SoloPy',        
-  packages = ['SoloPy'],  
-  version = 'v3.1.3',      
-  license='gpl-3.0',      
-  description = 'PYTHON Library for Control Solo Motor',   
-  author = 'Solo',                  
-  author_email = 'support@solomotorcontrollers.com',      
-  url = 'https://github.com/Solo-FL/SoloPy',   
-  download_url = 'https://github.com/Solo-FL/SoloPy/archive/refs/tags/v3.1.3.tar.gz',    
-  keywords = ['Solo Motor controllers', 'Solo', 'SoloPy'],   
-  install_requires=[           
-          'pyserial==3.5',
-          'python-can==4.2.2',
-          'python-interface==1.6.1'
-      ],
-  classifiers=[
-    'Development Status :: 4 - Beta',      
-    'Intended Audience :: Developers',    
-    'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',   
-    'Programming Language :: Python :: 3',      
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-  ],
+    name='SoloPy',        
+    version='4.0.0',      
+    license='MIT',      
+    description='Python library for interfacing with Solo Motor Controllers',   
+    author='Solo',                  
+    author_email='support@solomotorcontrollers.com',      
+    url='https://github.com/Solo-FL/SoloPy',  
+    packages=find_packages(),  # Automatically find all packages
+    install_requires=[           
+        'pyserial',
+        'python-can',
+        'python-interface',
+    ],
+    classifiers=[
+        'Development Status :: 4 - Beta',      
+        'Intended Audience :: Developers',    
+        'Topic :: Software Development :: Build Tools',
+        'License :: OSI Approved :: MIT License',   
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+    ],
+    project_urls={  # Replaces deprecated `download_url`
+        "Source": "https://github.com/Solo-FL/SoloPy",
+        "Download": "https://github.com/Solo-FL/SoloPy/archive/refs/tags/v4.0.0.tar.gz",
+        "Documentation": "https://github.com/Solo-FL/SoloPy/wiki",
+    },
+    python_requires=">=3.4",  # Ensures compatibility with Python 3.4+
 )

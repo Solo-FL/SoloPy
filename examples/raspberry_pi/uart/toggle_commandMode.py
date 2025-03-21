@@ -1,10 +1,10 @@
-# Copyright: (c) 2021, 2022, 2023 SOLO motor controllers project
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright: (c) 2021-present, SOLO motor controllers project
+# MIT License (see LICENSE file for more details)
 
 # Title: SoloPy
 # Author: SOLOMotorControllers
-# Date: 2023
-# Code version: 3.0.0
+# Date: 2025
+# Code version: 4.0.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -18,7 +18,7 @@ import SoloPy as solo
 import time
 
 # instanciate a SOLO object:
-mySolo = solo.SoloMotorControllerUart("/dev/ttyS0", 0, solo.UART_BAUD_RATE.RATE_937500)
+mySolo = solo.SoloMotorControllerUart("/dev/ttyS0", 0, solo.UartBaudRate.RATE_937500)
 
 # loop actions
 while True:
@@ -30,40 +30,37 @@ while True:
     commandMode, error = mySolo.get_command_mode()
 
     # we print the info:
-    print("COMMAND MODE READ: " + str(commandMode) + " ERROR: " + str(error))
+    print("COMMAND MODE READ: " + str(commandMode) + " Error: " + str(error))
 
     # STEP 2
     # if we have no error we want to change the command mode of SOLO
     # we can compare error with SOLOMotorControllersError enum or int value. Equal code: 
     #    error == SOLOMotorControllers::SOLOMotorControllersError::noErrorDetected
     #    error == 0
-    if error == solo.ERROR.NO_ERROR_DETECTED:
+    if error == solo.Error.NO_ERROR_DETECTED:
         # we check the commandMode readed value.
         # we can compare commandMode with CommandMode enum or int value. Equal code:
-        #    commandMode == solo.COMMAND_MODE.ANALOGUE
+        #    commandMode == solo.CommandMode.ANALOGUE
         #    commandMode == 0
 
-        if commandMode == solo.COMMAND_MODE.ANALOGUE:
+        if commandMode == solo.CommandMode.ANALOGUE:
             # setIsSuccesfull : set return if the set was succesfull
             # SOLOMotorControllers::CommandMode::digital : is the command mode i want to set to SOLO.
             # error : after the execution of the fuction will have the error status of the execution
-            setIsSuccesfull, error = mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
+            setIsSuccesfull, error = mySolo.set_command_mode(solo.CommandMode.DIGITAL)
 
             # we can call the function without check the return:
-            # mySolo.set_command_mode(solo.COMMAND_MODE.DIGITAL)
+            # mySolo.set_command_mode(solo.CommandMode.DIGITAL)
 
             # we print the info:
-            print("COMMAND MODE SET: " + str(commandMode) + " ERROR: " + str(error))
+            print("COMMAND MODE SET: " + str(commandMode) + " Error: " + str(error))
         else:
             # in this situation we want to set analogue as command mode in SOLO
             # we choose the alternative code with less herror and status controlling:
-            setIsSuccesfull, error = mySolo.set_command_mode(solo.COMMAND_MODE.ANALOGUE)
+            setIsSuccesfull, error = mySolo.set_command_mode(solo.CommandMode.ANALOGUE)
 
             # we can call the function without check the return:
-            # mySolo.set_command_mode(solo.COMMAND_MODE.ANALOGUE)
+            # mySolo.set_command_mode(solo.CommandMode.ANALOGUE)
 
             # we print the info:
-            print("COMMAND MODE SET: " + str(commandMode) + " ERROR: " + str(error))
-
-#ensure close the serial
-mySolo.disconnect() 
+            print("COMMAND MODE SET: " + str(commandMode) + " Error: " + str(error))

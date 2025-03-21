@@ -4,7 +4,7 @@
 # Title: SoloPy
 # Author: SOLOMotorControllers
 # Date: 2025
-# Code version: 4.0.0
+# Code version: 4.1.0
 # Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 # This Library is made by SOLOMotorControllers.COM
 # please visit:  https://www.SOLOMotorControllers.com/
@@ -22,7 +22,7 @@ import time
 # RUN IT BEFORE TEST THE CODE ON RASPBERRY PI:
 # sudo ip link set can0 up type can bitrate 1000000
 # instanciate a SOLO object:
-mySolo = solo.SOLOMotorControllersCanopen(0, solo.CanBusBaudRate.RATE_1000)
+mySolo = solo.SoloMotorControllersCanopen(0, solo.CanBusBaudRate.RATE_1000)
 
 # Desired Switching or PWM Frequency at Output
 pwmFrequency = 20

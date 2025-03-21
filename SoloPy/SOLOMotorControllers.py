@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions prototypes for the Solo Drivers
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2025
-#  @version 4.0.0
+#  @version 4.1.0
 
 ## @attention
 # Copyright: (c) 2021-present, SOLO motor controllers project
@@ -210,8 +210,8 @@ class Channel(Enum):
     ## channel3
     CHANNEL3 = 3
 
-#class SOLOMotorControllers(Interface):
-class SOLOMotorControllers:
+#class SoloMotorControllers(Interface):
+class SoloMotorControllers:
 
     def set_device_address(self, device_address: int) -> Tuple[bool, Error]:
         pass

@@ -1,4 +1,4 @@
-## @package SOLOMotorControllersUtils.py
+## @package SoloMotorControllersUtils.py
 #  @author  SOLOMotorControllers
 #  @brief   This file contains all the utility common functions
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy

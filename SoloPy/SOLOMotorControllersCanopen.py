@@ -3,7 +3,7 @@
 #  @brief   This file contains all the functions for the Solo Canopen Drivers
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2025
-#  @version 4.0.0
+#  @version 4.1.0
 
 ## @attention
 # Copyright: (c) 2021-present, SOLO motor controllers project
@@ -70,8 +70,8 @@ class PdoParameterConfig:
     isRrtParameterEnable    : bool
     syncParameterCount      : int
 
-#class SOLOMotorControllersCanopen(implements(SOLOMotorControllers)):
-class SOLOMotorControllersCanopen:
+#class SoloMotorControllersCanopen(implements(SoloMotorControllers)):
+class SoloMotorControllersCanopen:
     def __init__(
             self,
             address = 0,
@@ -1043,7 +1043,7 @@ class SOLOMotorControllersCanopen:
     #@retval List of [bool 0 fail / 1 for success, Error class/enumeration]
     def reset_position_to_zero(self) -> Tuple[bool, Error]:
         error = Error.NO_PROCESSED_COMMAND
-        information_to_send = [0x00, 0x00, 0x00, 0x00]
+        information_to_send = [0x00, 0x00, 0x00, 0x01]
         result, error = self.canopen_transmit(
             self._address, ConstantCanopen.OBJECT_RESET_POSITION_TO_ZERO, 0x00, information_to_send)
         return result, error
@@ -1428,8 +1428,8 @@ class SOLOMotorControllersCanopen:
     ##
     #@brief     This command Set the Digiatal Ouput pin Status
     #           .The method refers to the Object Dictionary: 0x3048
-    #@param  channel SOLOMotorControllers.Channel
-    #@param  state	 SOLOMotorControllers.DigitalIoState
+    #@param  channel SoloMotorControllers.Channel
+    #@param  state	 SoloMotorControllers.DigitalIoState
     #@retval List of [bool 0 fail / 1 for success, Error class/enumeration]
     #
     def set_digital_output_state(self, channel: Channel, state: DigitalIoState) -> Tuple[bool, Error]:
@@ -2401,6 +2401,21 @@ class SOLOMotorControllersCanopen:
             self._address, ConstantCanopen.OBJECT_ENCODER_INDEX_COUNTS, 0x00, information_to_send)
         if (error == Error.NO_ERROR_DETECTED and result is True):
             return convert_from_data(information_received, DataType.UINT32), error
+        return -1, error
+    
+    ##
+    # @brief  This Command reads the current CAN bus baud rate setting
+    #         configured on the device.
+    #         TThe method refers to the Object Dictionary: 0x302C
+    # @retval Tuple of [CanBusBaudRate enumeration, Error class/enumeration]
+    def get_can_bus_baudrate(self) -> Tuple[CanBusBaudRate, Error]:
+        information_to_send = [0x00, 0x00, 0x00, 0x00]
+        information_received = []
+        error = Error.NO_PROCESSED_COMMAND
+        result, error, information_received = self.canopen_receive(
+            self._address, ConstantCanopen.OBJECT_CANBUS_BAUD_RATE, 0x00, information_to_send)
+        if (error == Error.NO_ERROR_DETECTED and result is True):
+            return CanBusBaudRate(convert_from_data(information_received, DataType.UINT32)), error
         return -1, error
 
     ##

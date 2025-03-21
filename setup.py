@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='SoloPy',        
-    version='4.0.0',      
+    version='4.1.0',      
     license='MIT',      
     description='Python library for interfacing with Solo Motor Controllers',   
     author='Solo',                  
@@ -29,7 +29,7 @@ setup(
     ],
     project_urls={  # Replaces deprecated `download_url`
         "Source": "https://github.com/Solo-FL/SoloPy",
-        "Download": "https://github.com/Solo-FL/SoloPy/archive/refs/tags/v4.0.0.tar.gz",
+        "Download": "https://github.com/Solo-FL/SoloPy/archive/refs/tags/v4.1.0.tar.gz",
         "Documentation": "https://github.com/Solo-FL/SoloPy/wiki",
     },
     python_requires=">=3.4",  # Ensures compatibility with Python 3.4+

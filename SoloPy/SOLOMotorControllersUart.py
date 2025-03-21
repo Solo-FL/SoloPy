@@ -1,9 +1,9 @@
-## @package SOLOMotorControllersUart.py
-#  @author  SOLOMotorControllers
+## @package SoloMotorControllersUart.py
+#  @author  SoloMotorControllers
 #  @brief   This file contains all the functions for the Solo Uart Drivers 
 #           Availability: https://github.com/Solo-FL/SoloPy/tree/main/SoloPy
 #  @date    Date: 2025
-#  @version 4.0.0
+#  @version 4.1.0
 
 ## @attention
 # Copyright: (c) 2021-present, SOLO motor controllers project
@@ -20,7 +20,7 @@ import SoloPy.ConstantUart as ConstantUart
 from SoloPy.SOLOMotorControllers import *
 from SoloPy.SOLOMotorControllersUtils import *
 
-#class SoloMotorControllerUart(implements(SOLOMotorControllers)):
+#class SoloMotorControllerUart(implements(SoloMotorControllers)):
 class SoloMotorControllerUart:
 
     def __init__(
@@ -263,12 +263,6 @@ class SoloMotorControllerUart:
         if self._ser_status == -1:
             status += 'SPS: Serial on Error'
         return status
-
-    def serial_is_working(self) -> bool:
-        """Determine Communication on serial port."""
-        if self.get_phase_a_voltage() == -1:
-            return False
-        return True
 
     # #############################Write############################# #
 
@@ -1174,8 +1168,8 @@ class SoloMotorControllerUart:
     ##
     #@brief  This command Set the Digiatal Ouput pin Status
     #          .The method refers to the Uart Write command: 0x38
-    #@param  channel    SOLOMotorControllers.Channel
-    #@param  state	    .SOLOMotorControllers.DigitalIoState
+    #@param  channel    SoloMotorControllers.Channel
+    #@param  state	    .SoloMotorControllers.DigitalIoState
     #@retval List of [bool 0 fail / 1 for success, Error class/enumeration]
     #
     def set_digital_output_state(self, channel: Channel, state: DigitalIoState) -> Tuple[bool, Error]:
@@ -1956,7 +1950,12 @@ class SoloMotorControllerUart:
             data = get_data(cmd)
             return convert_from_data(data, DataType.UINT32), Error.NO_ERROR_DETECTED
         return -1, error
-
+    
+    ##
+    # @brief  This Command reads the current CAN bus baud rate setting
+    #         configured on the device.
+    #         The method refers to the Uart Read command: 0xBA
+    # @retval Tuple of [CanBusBaudRate enumeration, Error class/enumeration]
     def get_can_bus_baudrate(self) -> Tuple[CanBusBaudRate, Error]:
         cmd = [self._address, ConstantUart.READ_CANBUS_BAUD_RATE,
                0x00, 0x00, 0x00, 0x00]

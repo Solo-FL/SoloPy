@@ -12,7 +12,6 @@ More information about SoloPy can be found on `the SOLO website <https://www.sol
 
 For a list of all available methods, refer to the `DataSheet <https://www.solomotorcontrollers.com/resources/specs-datasheets/>`__.
 
----
 
 Features
 =============
@@ -23,7 +22,7 @@ Features
 - **Linux OS** using **USB** or **CANopen** (CANopen with Canable)
 - **Raspberry Pi** or any similar controller using **UART protocol, USB, and CANopen** (CANopen with Canable or MCP2515 Shield)
 
----
+
 Installation
 =============
 
@@ -37,7 +36,6 @@ To install SoloPy from PyPI, run:
 
 More information is available in each example's README.
 
----
 
 Updating
 =============
@@ -48,7 +46,7 @@ If you have already installed the library and want to update it on **Linux, Rasp
 
    pip install --upgrade SoloPy 
 
----
+
 
 Dependencies
 =============
@@ -60,14 +58,13 @@ SoloPy requires the following dependencies:
 - For **UART communication**: `pyserial <https://github.com/pyserial/pyserial>`__
 - For **CANopen communication**: `Python-Can <https://pypi.org/project/python-can/>`__
 
----
+
 
 Authors
 =============
 
 SoloPy is created and maintained by the **SOLO Motor Controllers** team.
 
----
 
 License
 =============
